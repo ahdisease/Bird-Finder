@@ -1,9 +1,36 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link v-bind:to="{ name: 'home' }">Home</router-link>&nbsp;|&nbsp;
-      <router-link v-bind:to="{ name: 'logout' }" v-if="$store.state.token != ''">Logout</router-link>
+    <SiteHeader />
+    <div id="horizontal">
+      <LeftNav />
+      <ContentMain />
     </div>
-    <router-view />
   </div>
 </template>
+
+<script>
+import SiteHeader from "./components/SiteHeader.vue";
+import LeftNav from "./components/LeftNav.vue";
+import ContentMain from "./components/ContentMain.vue";
+export default {
+  components: { SiteHeader, LeftNav, ContentMain },
+};
+</script>
+
+<style>
+#app {
+  background-color: #fdfffc;
+  font-family: "Bitter", serif;
+  display: flex;
+  flex-direction: column;
+}
+#main-content {
+  display: flex;
+}
+#horizontal {
+  display: flex;
+  margin-top: 8px;
+  min-height: 100vh;
+  height: auto;
+}
+</style>
