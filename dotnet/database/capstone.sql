@@ -112,6 +112,4 @@ UPDATE users
 			ORDER BY count(bird_id) DESC
 		)
 	WHERE users.user_id = 2
-
-	select * from users
 GO
