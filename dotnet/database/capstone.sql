@@ -58,7 +58,7 @@ ALTER TABLE bird_sighting
 	ADD CONSTRAINT FK_bird_sighting_users FOREIGN KEY (user_id) REFERENCES users (user_id);
 
 ALTER TABLE bird_sighting
-	ADD CONSTRAINT FK_bird_sighting_users FOREIGN KEY (bird_id) REFERENCES bird (id);
+	ADD CONSTRAINT FK_bird_sighting_bird FOREIGN KEY (bird_id) REFERENCES bird (id);
 
 
 --populate default data
