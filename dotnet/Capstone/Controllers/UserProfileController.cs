@@ -9,7 +9,6 @@ using System.Security.Principal;
 namespace Capstone.Controllers
 {
     [Authorize]
-    [Route("/profile")]
     [ApiController]
     public class UserProfileController : ControllerBase
     {
@@ -22,6 +21,7 @@ namespace Capstone.Controllers
         }
 
         [HttpGet]
+        [Route("/profile")]
         public IActionResult GetUserProfile()
         {
             IIdentity user = this.User.Identity;
@@ -54,6 +54,7 @@ namespace Capstone.Controllers
         }
 
         [HttpPost]
+        [Route("/createProfile")]
         public IActionResult CreateUserProfile([FromBody] UserProfile profile)
         {
             IIdentity user = this.User.Identity;
@@ -90,6 +91,7 @@ namespace Capstone.Controllers
         }
 
         [HttpPut]
+        [Route("/editProfile")]
         public IActionResult UpdateUserProfile([FromBody] UserProfile profile)
         {
             IIdentity user = this.User.Identity;
@@ -119,6 +121,7 @@ namespace Capstone.Controllers
         }
 
         [HttpDelete]
+        [Route("/deleteProfile")]
         public IActionResult DeleteUserProfile()
         {
             try

@@ -63,13 +63,13 @@ namespace Capstone.DAO
         {
             if (profile == null || string.IsNullOrEmpty(username))
             {
-                throw new ArgumentException();
+                throw new ArgumentException("Unable to locate profile");
             }
 
-            if (!profile.ProfileActive)
-            {
-                throw new DaoException("Unable to locate profile");
-            }
+            //if (!profile.ProfileActive)
+            //{
+            //    throw new DaoException("Unable to locate profile");
+            //}
 
             //build sql command based on given parameters. Most common bird is always calculated for username.
             string sql =    "UPDATE users";
