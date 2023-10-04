@@ -65,7 +65,31 @@ namespace Capstone.DAO
 
         public Bird getRandomBird()
         {
-            throw new System.NotImplementedException();
+            Bird randomBird = null;
+
+            string sql = "SELECT TOP 1 * FROM bird ORDER BY NEWID()";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        randomBird = MapRowToBird(reader);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("SQL exception occurred", ex);
+            }
+
+            return randomBird;
         }
 
         public List<Bird> listAllBirds()
