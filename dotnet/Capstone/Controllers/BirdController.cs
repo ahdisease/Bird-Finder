@@ -22,7 +22,7 @@ namespace Capstone.Controllers
         [HttpGet("/")]
         public ActionResult<object> OpenEndpoint()
         {
-            return Ok(new { message = "Welcome to Birds!", description = "This is an open endpoint. To reach any other endpoint in this API, you must be authenticated." });
+            return Ok(new { message = "Welcome to Birds Finder", description = "This is a place to document your bird sightings." });
         }
 
 
@@ -39,5 +39,23 @@ namespace Capstone.Controllers
             return birdList;
             
         }
+
+        [HttpGet("/birds/{id}")]
+        public Bird getBird(int id)
+        {
+            Bird bird = birdDao.getBird(id);
+           // const string ErrorMessage = "No bird matches this id.";
+
+            if (bird == null)
+            {
+                Console.WriteLine("No bird matches this id");
+                //return StatusCode(404, ErrorMessage);
+            }
+      
+            return bird;
+            
+        }
+
+
     }
 }

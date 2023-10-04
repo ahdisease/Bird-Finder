@@ -31,7 +31,31 @@ namespace Capstone.DAO
 
         public Bird getBird(int id)
         {
-            throw new System.NotImplementedException();
+            Bird bird = null;
+            string sql = "SELECT id, name, description, picture FROM bird WHERE id = @id ";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@id", id);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        bird = MapRowToBird(reader);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("SQL exception occurred", ex);
+            }
+
+            return bird;
         }
 
         public Bird getBirdByZip(string zipcode)
@@ -48,7 +72,7 @@ namespace Capstone.DAO
         {
             List<Bird> birdList = new List<Bird>();
 
-            string sql = "SELECT * FROM bird";
+            string sql = "SELECT id, name, description, picture FROM bird";
 
             try
             {
