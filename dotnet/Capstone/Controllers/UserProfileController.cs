@@ -31,10 +31,41 @@ namespace Capstone.Controllers
             const string errorMessage = "An unexpected error occurred retrieving profile";
             IActionResult result = BadRequest(new { message = errorMessage });
 
+            UserProfile profile = _profileDao.GetUserProfileByUsername(this.User.Identity.Name);
+
+            if (profile != null)
+            {
+                result = Ok(profile);
+            }
+
             return result;
         }
 
         [HttpPost]
+        public IActionResult CreateUserProfile([FromBody] UserProfile profile)
+        {
+            IIdentity user = this.User.Identity;
+
+            // Default generic error message
+            string errorMessage = "An unexpected error occurred updating profile";
+            IActionResult result;
+
+            try
+            {
+                _profileDao.UpdateUserProfile(profile, user.Name);
+                result = Ok();
+            } catch (DaoException)
+            {
+                result = BadRequest(new { message = errorMessage });
+            } catch (ArgumentException)
+            {
+                errorMessage = "UserProfile object was not provided.";
+                result = BadRequest(new { message = errorMessage });
+
+            }
+
+            return result;
+        }
 
         [HttpPut]
         public IActionResult UpdateUserProfile([FromBody] UserProfile profile)
@@ -47,25 +78,18 @@ namespace Capstone.Controllers
 
             try
             {
-                profile = _profileDao.UpdateUserProfile(profile, user.Name);
+                _profileDao.UpdateUserProfile(profile, user.Name);
+                result = Ok();
             }
             catch (DaoException)
             {
-                profile = null;
+                result = BadRequest(new { message = errorMessage });
             }
             catch (ArgumentException)
             {
                 errorMessage = "UserProfile object was not provided.";
-                profile = null;
-            }
-
-            if (profile != null)
-            {
-                result = Created("/login", profile);
-            } 
-            else
-            {
                 result = BadRequest(new { message = errorMessage });
+
             }
 
             return result;

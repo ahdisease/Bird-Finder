@@ -14,7 +14,47 @@ namespace Capstone.DAO
             connectionString = dbConnectionString;
         }
 
-        public UserProfile UpdateUserProfile(UserProfile profile, string username)
+        public UserProfile GetUserProfileByUsername(string username)
+        {
+            UserProfile profile = null;
+
+            if (string.IsNullOrEmpty(username))
+            {
+                throw new DaoException("Must call a specific profile.");
+            }
+
+            string sql = "SELECT location, skill_level, favorite_bird, most_common_bird FROM users WHERE username=@username;";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand command = new SqlCommand();
+
+                    command.Connection = conn;
+                    command.CommandText = sql;
+
+                    command.Parameters.AddWithValue("@username", username);
+
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        profile = MapRowToProfile(reader);
+                    }
+
+                    return profile;
+                }
+            }
+            catch (SqlException)
+            {
+                throw new DaoException("A SQL error occurred.");
+            }
+        }
+
+        public void UpdateUserProfile(UserProfile profile, string username)
         {
             if (profile == null || username == null || username.Trim() == "")
             {
@@ -77,20 +117,19 @@ namespace Capstone.DAO
                         profile = MapRowToProfile(reader);
                     }
                 }
-            } catch (SqlException)
+            } 
+            catch (SqlException)
             {
                 throw new DaoException("SQL Exception occurred.");
             }
-
-            return profile;
-            
         }
+
 
         private UserProfile MapRowToProfile(SqlDataReader reader)
         {
             UserProfile profile = new UserProfile();
 
-            profile.SkillLevel = GetSafeString(reader, "location");
+            profile.Location = GetSafeString(reader, "location");
             profile.SkillLevel = GetSafeString(reader,"skill_level");
             profile.FavoriteBird = GetSafeInt(reader, "favorite_bird");
             profile.MostCommonBird = GetSafeInt(reader, "most_common_bird");
@@ -115,5 +154,7 @@ namespace Capstone.DAO
             }
             return -1;
         }
+
+
     }
 }
