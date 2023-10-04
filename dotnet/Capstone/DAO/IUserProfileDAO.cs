@@ -6,6 +6,10 @@ namespace Capstone.DAO
     {
         public UserProfile GetUserProfileByUsername(string username);
 
-        public void UpdateUserProfile(UserProfile profile, string username);
+        public UserProfile UpdateUserProfile(UserProfile profile, string username);
+
+        public void DeleteUserProfile( string username);
+
+        public void ActivateUserProfile(UserProfile profile, string username);
     }
 }

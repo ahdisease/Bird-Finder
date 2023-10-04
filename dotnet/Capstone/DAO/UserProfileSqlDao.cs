@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using System;
 using Capstone.Exceptions;
 
+
 namespace Capstone.DAO
 {
     public class UserProfileSqlDao : IUserProfileDao
@@ -20,10 +21,10 @@ namespace Capstone.DAO
 
             if (string.IsNullOrEmpty(username))
             {
-                throw new DaoException("Must call a specific profile.");
+                throw new ArgumentException("Must call a specific profile.");
             }
 
-            string sql = "SELECT location, skill_level, favorite_bird, most_common_bird FROM users WHERE username=@username;";
+            string sql = "SELECT location, skill_level, favorite_bird, most_common_bird, profile_active FROM users WHERE username=@username;";
 
             try
             {
@@ -44,8 +45,12 @@ namespace Capstone.DAO
                     {
                         profile = MapRowToProfile(reader);
                     }
+                    if (profile.ProfileActive)
+                    {
+                        return profile;
+                    }
 
-                    return profile;
+                    throw new DaoException("Unable to locate profile");
                 }
             }
             catch (SqlException)
@@ -54,34 +59,38 @@ namespace Capstone.DAO
             }
         }
 
-        public void UpdateUserProfile(UserProfile profile, string username)
+        public UserProfile UpdateUserProfile(UserProfile profile, string username)
         {
-            if (profile == null || username == null || username.Trim() == "")
+            if (profile == null || string.IsNullOrEmpty(username))
             {
                 throw new ArgumentException();
             }
 
+            if (!profile.ProfileActive)
+            {
+                throw new DaoException("Unable to locate profile");
+            }
+
             //build sql command based on given parameters. Most common bird is always calculated for username.
-            string sql = "UPDATE users SET users.most_common_bird = ( SELECT TOP(1) bird_id FROM bird_sighting JOIN users ON users.user_id = bird_sighting.user_id WHERE users.username = @username GROUP BY bird_id ORDER BY count(bird_id) DESC ) ";
-            
-            if (profile.Location != null)
+            string sql =    "UPDATE users";
+            string sqlSet =     " SET users.most_common_bird = ( SELECT TOP(1) bird_id FROM bird_sighting JOIN users ON users.user_id = bird_sighting.user_id WHERE users.username = @username GROUP BY bird_id ORDER BY count(bird_id) DESC ) ";
+            string sqlOutput =  " OUTPUT INSERTED.location, INSERTED.skill_level, INSERTED.favorite_bird, INSERTED.most_common_bird, INSERTED.profile_active";
+            string sqlWhere =   " WHERE users.username = @username";
+
+            if (!string.IsNullOrEmpty(profile.Location))
             {
-                sql += ", users.location = @location";
+                sqlSet += ", users.location = @location";
             }
-            if (profile.SkillLevel != null || profile.SkillLevel == "")
+            if (!string.IsNullOrEmpty(profile.SkillLevel))
             {
-                sql += ", users.skill_level = @skill_level";
-            }
-            else
-            {
-                sql += ", users.skill_level = skill_level";
+                sqlSet += ", users.skill_level = @skill_level";
             }
             if (profile.FavoriteBird > 0)
             {
-                sql += ", users.favorite_bird = @favorite_bird"; 
+                sqlSet += ", users.favorite_bird = @favorite_bird"; 
             }
 
-            sql += " WHERE users.username = @username";
+            sql = sql + sqlSet + sqlOutput + sqlWhere;
 
             //open connection and perform update
             try
@@ -112,10 +121,13 @@ namespace Capstone.DAO
                     }
 
                     SqlDataReader reader = command.ExecuteReader();
+
                     if (reader.Read())
                     {
-                        profile = MapRowToProfile(reader);
+                        return MapRowToProfile(reader);
                     }
+
+                    throw new DaoException("Unable to locate profile");
                 }
             } 
             catch (SqlException)
@@ -124,6 +136,64 @@ namespace Capstone.DAO
             }
         }
 
+        public void DeleteUserProfile(string username)
+        {
+            if (string.IsNullOrEmpty(username))
+            {
+                throw new ArgumentException("Profile could not be found");
+            }
+
+            string sql = "UPDATE users SET profile_active = 0 WHERE users.username = @username;";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand command = new SqlCommand();
+
+                    command.Connection = conn;
+                    command.CommandText = sql;
+                    command.Parameters.AddWithValue("@username", username);
+                   
+                    SqlDataReader reader = command.ExecuteReader();
+                }
+            } catch (SqlException)
+            {
+                throw new DaoException("SQL Exception occurred.");
+            }
+        }
+
+        public void ActivateUserProfile(UserProfile profile, string username)
+        {
+            if (string.IsNullOrEmpty(username))
+            {
+                throw new ArgumentException("Unable to activate profile without username");
+            }
+
+            string sql = "UPDATE users SET profile_active = 1 WHERE users.username = @username;";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand command = new SqlCommand();
+
+                    command.Connection = conn;
+                    command.CommandText = sql;
+                    command.Parameters.AddWithValue("@username", username);
+
+                    SqlDataReader reader = command.ExecuteReader();
+                }
+                profile.ProfileActive = true;
+            } catch (SqlException)
+            {
+                throw new DaoException("SQL Exception occurred.");
+            }
+        }
 
         private UserProfile MapRowToProfile(SqlDataReader reader)
         {
@@ -133,6 +203,7 @@ namespace Capstone.DAO
             profile.SkillLevel = GetSafeString(reader,"skill_level");
             profile.FavoriteBird = GetSafeInt(reader, "favorite_bird");
             profile.MostCommonBird = GetSafeInt(reader, "most_common_bird");
+            profile.ProfileActive = Convert.ToBoolean(reader["profile_active"]);
 
             return profile;
         }
@@ -155,6 +226,6 @@ namespace Capstone.DAO
             return -1;
         }
 
-
+       
     }
 }

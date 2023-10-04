@@ -6,6 +6,7 @@
         public string SkillLevel { get; set; }
         public int FavoriteBird { get; set; }
         public int MostCommonBird { get; set; }
+        public bool ProfileActive { get; set; }
 
     }
 

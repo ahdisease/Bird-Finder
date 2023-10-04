@@ -2,11 +2,8 @@
 using Capstone.DAO;
 using Capstone.Exceptions;
 using Capstone.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using System;
-using Microsoft.AspNetCore.Hosting.Server.Features;
-using System.Security.Claims;
 using System.Security.Principal;
 
 namespace Capstone.Controllers
@@ -25,17 +22,32 @@ namespace Capstone.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetUserProfile(IdentityUser user)
+        public IActionResult GetUserProfile()
         {
+            IIdentity user = this.User.Identity;
+
             // Default generic error message
             const string errorMessage = "An unexpected error occurred retrieving profile";
-            IActionResult result = BadRequest(new { message = errorMessage });
-
-            UserProfile profile = _profileDao.GetUserProfileByUsername(this.User.Identity.Name);
-
-            if (profile != null)
+            IActionResult result;
+            try
             {
-                result = Ok(profile);
+                UserProfile profile = _profileDao.GetUserProfileByUsername(user.Name);
+                if (profile != null)
+                {
+                    result = Ok(profile);
+                }
+                else
+                {
+                    result = BadRequest(errorMessage);
+                }
+            }
+            catch (DaoException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch (ArgumentException e)
+            {
+                result = BadRequest(new { message = e.Message });
             }
 
             return result;
@@ -50,18 +62,28 @@ namespace Capstone.Controllers
             string errorMessage = "An unexpected error occurred updating profile";
             IActionResult result;
 
+            if (profile.ProfileActive)
+            {
+                return BadRequest(new { message = "Profile already created. Use PUT method to update." });
+            }
+
             try
             {
-                _profileDao.UpdateUserProfile(profile, user.Name);
-                result = Ok();
-            } catch (DaoException)
+                _profileDao.ActivateUserProfile(profile, user.Name);
+                profile = _profileDao.UpdateUserProfile(profile, user.Name);
+                result = Created("",profile);
+            } 
+            catch (DaoException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            } 
+            catch (ArgumentException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch
             {
                 result = BadRequest(new { message = errorMessage });
-            } catch (ArgumentException)
-            {
-                errorMessage = "UserProfile object was not provided.";
-                result = BadRequest(new { message = errorMessage });
-
             }
 
             return result;
@@ -80,19 +102,34 @@ namespace Capstone.Controllers
             {
                 _profileDao.UpdateUserProfile(profile, user.Name);
                 result = Ok();
+            } catch (DaoException e)
+            {
+                result = BadRequest(new { message = e.Message });
             }
-            catch (DaoException)
+            catch (ArgumentException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch
             {
                 result = BadRequest(new { message = errorMessage });
-            }
-            catch (ArgumentException)
-            {
-                errorMessage = "UserProfile object was not provided.";
-                result = BadRequest(new { message = errorMessage });
-
             }
 
             return result;
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteUserProfile()
+        {
+            try
+            {
+                _profileDao.DeleteUserProfile(this.User.Identity.Name);
+                return NoContent();
+            }
+            catch 
+            {
+                return NotFound(new { message = "Unable to locate profile." });
+            } 
         }
     }
 }
