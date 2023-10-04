@@ -56,6 +56,20 @@ namespace Capstone.Controllers
             
         }
 
+        [HttpGet("/birds/random")]
+        public Bird getRandomBird()
+        {
+            Bird randomBird = birdDao.getRandomBird();
+
+            if (randomBird == null)
+            {
+                Console.WriteLine("No bird matches this id");
+                //return StatusCode(404, ErrorMessage);
+            }
+
+            return randomBird;
+        }
+
 
     }
 }
