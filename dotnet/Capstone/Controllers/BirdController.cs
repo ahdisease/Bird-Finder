@@ -96,5 +96,11 @@ namespace Capstone.Controllers
 
         }
 
+        [HttpDelete("/birds/{id}")]
+        public void deleteBird(int id)
+        {
+            birdDao.deleteBird(id);
+        }
+
     }
 }
