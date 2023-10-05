@@ -5,11 +5,14 @@ using Capstone.Models;
 using Microsoft.AspNetCore.Authorization;
 using System;
 using System.Security.Principal;
+using Microsoft.AspNetCore.Cors;
 
 namespace Capstone.Controllers
 {
+    [Route("[controller]")]
     [Authorize]
     [ApiController]
+    
     public class UserProfileController : ControllerBase
     {
         //private readonly IUserDao _userDao;
@@ -38,12 +41,12 @@ namespace Capstone.Controllers
                 }
                 else
                 {
-                    result = BadRequest(errorMessage);
+                    result = NotFound(new { message = errorMessage });
                 }
             }
             catch (DaoException e)
             {
-                result = BadRequest(new { message = e.Message });
+                result = NotFound(new { message = e.Message });
             }
             catch (ArgumentException e)
             {

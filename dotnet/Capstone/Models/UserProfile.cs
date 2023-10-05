@@ -5,7 +5,7 @@ namespace Capstone.Models
     public class UserProfile
     {
         [Required]
-        public string Location { get; set; }
+        public string ZipCode { get; set; }
         [Required]
         public string SkillLevel { get; set; }
         [Required]

@@ -77,7 +77,7 @@ namespace Capstone.DAO
             string sqlOutput =  " OUTPUT INSERTED.location, INSERTED.skill_level, INSERTED.favorite_bird, INSERTED.most_common_bird, INSERTED.profile_active";
             string sqlWhere =   " WHERE users.username = @username";
 
-            if (!string.IsNullOrEmpty(profile.Location))
+            if (!string.IsNullOrEmpty(profile.ZipCode))
             {
                 sqlSet += ", users.location = @location";
             }
@@ -108,7 +108,7 @@ namespace Capstone.DAO
                     command.Parameters.AddWithValue("@username", username);
                     if (sql.Contains("@location"))
                     {
-                        command.Parameters.AddWithValue("@location", profile.Location.ToString());
+                        command.Parameters.AddWithValue("@location", profile.ZipCode.ToString());
                     }
                     if (sql.Contains("@skill_level"))
                     {
@@ -199,7 +199,7 @@ namespace Capstone.DAO
         {
             UserProfile profile = new UserProfile();
 
-            profile.Location = GetSafeString(reader, "location");
+            profile.ZipCode = GetSafeString(reader, "location");
             profile.SkillLevel = GetSafeString(reader,"skill_level");
             profile.FavoriteBird = GetSafeInt(reader, "favorite_bird");
             profile.MostCommonBird = GetSafeInt(reader, "most_common_bird");
