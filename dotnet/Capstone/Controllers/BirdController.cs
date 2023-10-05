@@ -16,9 +16,10 @@ namespace Capstone.Controllers
         public BirdController(BirdDao birdDao)
         {
             this.birdDao = birdDao;
+            
         }
 
-        
+
         [HttpGet("/")]
         public ActionResult<object> OpenEndpoint()
         {
@@ -65,9 +66,27 @@ namespace Capstone.Controllers
             {
                 Console.WriteLine("No bird matches this id");
                 //return StatusCode(404, ErrorMessage);
-            }
+            } 
 
             return randomBird;
+        }
+
+        [HttpPost("/birds")]
+        public void createBird(Bird newBird)
+        {
+            //const string ErrorMessage = "An error occurred and user was not created.";
+            try
+            {
+                Bird bird = birdDao.createBird(newBird, newBird.name, newBird.description, newBird.picture);
+                if (bird == null)
+                {
+                    Console.WriteLine(StatusCode(404));
+                }
+            }catch (DaoException )
+            {
+                Console.WriteLine(StatusCode(500));
+            }
+
         }
 
 
