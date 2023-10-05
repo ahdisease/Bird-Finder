@@ -89,6 +89,12 @@ namespace Capstone.Controllers
 
         }
 
+        [HttpPut("/birds/{id}")]
+        public void editBird(Bird updatedBird, int id)
+        {
+            birdDao.editBird(updatedBird, id);
+
+        }
 
     }
 }
