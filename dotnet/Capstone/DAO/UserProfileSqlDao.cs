@@ -47,12 +47,15 @@ namespace Capstone.DAO
                     {
                         profile = MapRowToProfile(reader);
                     }
-                    if (profile.ProfileActive)
-                    {
-                        return profile;
-                    }
+                    //if (profile.ProfileActive)
+                    //{
+                    return profile;
+                    //}
 
-                    throw new DaoException("Unable to locate profile");
+                    //throw new DaoException("Unable to locate profile");
+                    // TODO : Since there's currently no way to deactivate a profile on the front end, I've removed that restriction.
+                    //        The front end is currently confused by user and profile being the same object in the database, so its logic
+                    //        is making this feature use breaking.
                 }
             }
             catch (SqlException)
