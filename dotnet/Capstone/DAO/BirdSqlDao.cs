@@ -56,7 +56,24 @@ namespace Capstone.DAO
 
         public void deleteBird(int id)
         {
-            throw new System.NotImplementedException();
+            string sql = "DELETE FROM bird WHERE id = @id";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@id", id);
+ 
+                    SqlDataReader reader = cmd.ExecuteReader();
+                }
+            } 
+            catch (SqlException ex)
+            {
+                throw new DaoException("SQL exception occurred", ex);
+            }
         }
 
 
