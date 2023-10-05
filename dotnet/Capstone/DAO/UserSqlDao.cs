@@ -118,7 +118,7 @@ namespace Capstone.DAO
             string sql = "INSERT INTO users (username, password_hash, salt, user_role) " +
                          "OUTPUT INSERTED.user_id " +
                          "VALUES (@username, @password_hash, @salt, @user_role)";
-
+             
             int newUserId = 0;
             try
             {
