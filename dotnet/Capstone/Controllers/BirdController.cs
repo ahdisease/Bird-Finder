@@ -57,7 +57,7 @@ namespace Capstone.Controllers
             
         }
 
-        [HttpGet("/birds/random")]
+        [HttpGet("/randomBird")]
         public Bird getRandomBird()
         {
             Bird randomBird = birdDao.getRandomBird();
@@ -77,7 +77,7 @@ namespace Capstone.Controllers
             //const string ErrorMessage = "An error occurred and user was not created.";
             try
             {
-                Bird bird = birdDao.createBird(newBird, newBird.name, newBird.description, newBird.picture);
+                Bird bird = birdDao.createBird(newBird, newBird.name, newBird.description, newBird.imgUrl);
                 if (bird == null)
                 {
                     Console.WriteLine(StatusCode(404));

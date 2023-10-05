@@ -91,7 +91,7 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@id", id);
                     cmd.Parameters.AddWithValue("@name", bird.name);
                     cmd.Parameters.AddWithValue("@description", bird.description);
-                    cmd.Parameters.AddWithValue("@picture", bird.picture);
+                    cmd.Parameters.AddWithValue("@picture", bird.imgUrl);
 
                     SqlDataReader reader = cmd.ExecuteReader();
                 }
@@ -202,7 +202,7 @@ namespace Capstone.DAO
             bird.id = Convert.ToInt32(reader["id"]);
             bird.name = Convert.ToString(reader["name"]);
             bird.description = Convert.ToString(reader["description"]);
-            bird.picture = Convert.ToString(reader["picture"]);
+            bird.imgUrl = Convert.ToString(reader["picture"]);
          
             return bird;
         }
