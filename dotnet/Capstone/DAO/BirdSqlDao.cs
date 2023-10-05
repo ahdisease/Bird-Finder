@@ -2,21 +2,54 @@
 using Capstone.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
+using System.Security.Policy;
 
 namespace Capstone.DAO
 {
     public class BirdSqlDao : BirdDao
     {
         private readonly string connectionString;
+       
+
         public BirdSqlDao(string dbConnectionString)
         {
             connectionString = dbConnectionString;
+            
         }
 
-        public void createBird(Bird bird)
+        public Bird createBird(Bird bird, string name, string description, string picture)
         {
-            throw new System.NotImplementedException();
+            Bird newBird = null;
+
+            String sql = "INSERT INTO bird(name, description, picture) " +
+                "VALUES(@name, @description, @picture)";
+
+            int newBirdId = 0;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@name", name);
+                    cmd.Parameters.AddWithValue("@description", description);
+                    cmd.Parameters.AddWithValue("@picture", picture);
+
+                    newBirdId = Convert.ToInt32(cmd.ExecuteScalar());
+
+                }
+                newBird = getBird(newBirdId);
+
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("SQL exception occurred", ex);
+            }
+
+            return newBird;
         }
 
         public void deleteBird(int id)
