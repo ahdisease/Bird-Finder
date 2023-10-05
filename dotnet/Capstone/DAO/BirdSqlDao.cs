@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Security.Policy;
+using System.Xml.Linq;
 
 namespace Capstone.DAO
 {
@@ -18,6 +19,7 @@ namespace Capstone.DAO
             connectionString = dbConnectionString;
             
         }
+
 
         public Bird createBird(Bird bird, string name, string description, string picture)
         {
@@ -57,9 +59,31 @@ namespace Capstone.DAO
             throw new System.NotImplementedException();
         }
 
-        public void editBird(Bird bird)
+
+        public void editBird(Bird bird, int id)
         {
-            throw new System.NotImplementedException();
+            string sql = "UPDATE bird SET name = @name, description = @description, picture = @picture WHERE id = @id";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Parameters.AddWithValue("@name", bird.name);
+                    cmd.Parameters.AddWithValue("@description", bird.description);
+                    cmd.Parameters.AddWithValue("@picture", bird.picture);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("SQL exception occurred", ex);
+            }
+
         }
 
         public Bird getBird(int id)
