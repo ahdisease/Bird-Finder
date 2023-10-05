@@ -9,10 +9,12 @@ namespace Capstone.DAO
     public class UserProfileSqlDao : IUserProfileDao
     {
         private readonly string connectionString;
+        private readonly BirdDao birdDao;
 
         public UserProfileSqlDao(string dbConnectionString)
         {
             connectionString = dbConnectionString;
+            birdDao = new BirdSqlDao(dbConnectionString);
         }
 
         public UserProfile GetUserProfileByUsername(string username)
@@ -85,7 +87,7 @@ namespace Capstone.DAO
             {
                 sqlSet += ", users.skill_level = @skill_level";
             }
-            if (profile.FavoriteBird > 0)
+            if (profile.FavoriteBird.id > 0)
             {
                 sqlSet += ", users.favorite_bird = @favorite_bird"; 
             }
@@ -116,7 +118,7 @@ namespace Capstone.DAO
                     }
                     if (sql.Contains("@favorite_bird"))
                     {
-                        command.Parameters.AddWithValue("@favorite_bird", profile.FavoriteBird.ToString());
+                        command.Parameters.AddWithValue("@favorite_bird", profile.FavoriteBird.id);
 
                     }
 
@@ -200,12 +202,34 @@ namespace Capstone.DAO
             UserProfile profile = new UserProfile();
 
             profile.ZipCode = GetSafeString(reader, "location");
-            profile.SkillLevel = GetSafeString(reader,"skill_level");
-            profile.FavoriteBird = GetSafeInt(reader, "favorite_bird");
-            profile.MostCommonBird = GetSafeInt(reader, "most_common_bird");
+            profile.SkillLevel = GetSafeString(reader, "skill_level");
+            profile.FavoriteBird = GetSafeBird(reader, "favorite_bird");
+            profile.MostCommonBird = GetSafeBird(reader, "most_common_bird");
             profile.ProfileActive = Convert.ToBoolean(reader["profile_active"]);
 
             return profile;
+        }
+
+        private Bird GetSafeBird(SqlDataReader reader, string columnName)
+        {
+            Bird bird = null;
+            int birdId = GetSafeInt(reader, columnName);
+            if (birdId <= 0)
+            {
+                bird = new Bird();
+                return bird;
+            }
+
+            try
+            {
+                bird = birdDao.getBird(birdId);
+            }
+            catch
+            {
+                bird = new Bird();
+            }
+
+            return bird;
         }
 
         private string GetSafeString(SqlDataReader reader, string columnName)
