@@ -17,25 +17,8 @@ namespace Capstone.DAO
         public BirdSightingSqlDao(string connectionString)
         {
             this.connectionString = connectionString;
-
+            this.userDao = new UserSqlDao(connectionString);
         }
-
-        public BirdSightingSqlDao(IUserDao userDao)
-        {
-            this.userDao = userDao;
-        }
-
-        public BirdSightingSqlDao(string connectionString, IUserDao userDao)
-        {
-            this.connectionString = connectionString;
-            this.userDao = userDao;
-
-        }
-
-
-
-
-
 
 
         public BirdSighting addSighting(BirdSighting birdSighting, string username)
@@ -44,7 +27,9 @@ namespace Capstone.DAO
 
             //int userId = userDao.GetUserIdByUsername(username);
 
-            String sql = "INSERT INTO bird_sighting(user_id, bird_id, date_sighted) VALUES(@user_id, @bird_id, @date_sighted)";
+            String sql = "INSERT INTO bird_sighting(user_id, bird_id, date_sighted) VALUES((SELECT user_id FROM users WHERE username = @username), @bird_id, @date_sighted)";
+
+            //String sql = "INSERT INTO bird_sighting(user_id, bird_id, date_sighted) VALUES( user_id, @bird_id, @date_sighted)";
 
             int newSightingId = 0;
             try
@@ -54,7 +39,8 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@user_id", birdSighting.userId);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    //cmd.Parameters.AddWithValue("@user_id", userId);
                     cmd.Parameters.AddWithValue("@bird_id", birdSighting.birdId);
                     cmd.Parameters.AddWithValue("@date_sighted", birdSighting.dateSighted);
 
@@ -79,7 +65,26 @@ namespace Capstone.DAO
 
         public void editSighting(BirdSighting sighting, int id)
         {
-            throw new NotImplementedException();
+            string sql = "UPDATE bird_sighting SET bird_id = @bird_id, date_sighted = @date_sighted WHERE id = @id";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Parameters.AddWithValue("@bird_id", sighting.birdId);
+                    cmd.Parameters.AddWithValue("@date_sighted", sighting.dateSighted);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("SQL exception occurred", ex);
+            }
         }
 
         public BirdSighting getBirdSighting(int id)

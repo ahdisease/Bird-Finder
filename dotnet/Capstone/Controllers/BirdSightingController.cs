@@ -56,6 +56,11 @@ namespace Capstone.Controllers
             }
 
         }
+        [HttpPut("/editNote/{id}")]
+        public void editSighting(BirdSighting sighting, int id)
+        {
+            birdSightingDao.editSighting(sighting, id);
+        }
 
 
 
