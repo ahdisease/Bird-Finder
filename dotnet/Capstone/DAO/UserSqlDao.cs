@@ -155,5 +155,36 @@ namespace Capstone.DAO
             user.Role = Convert.ToString(reader["user_role"]);
             return user;
         }
+
+        public int GetUserIdByUsername(string username)
+        {
+            int userId = 0;
+
+            string sql = "SELECT user_id, FROM users WHERE username = @username";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        userId = Convert.ToInt32(reader["user_id"]);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("SQL exception occurred", ex);
+            }
+
+            return userId;
+        }
+
     }
 }

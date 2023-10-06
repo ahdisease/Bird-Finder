@@ -9,5 +9,6 @@ namespace Capstone.DAO
         User GetUserById(int id);
         User GetUserByUsername(string username);
         User CreateUser(string username, string password, string role);
+        int GetUserIdByUsername(string username);
     }
 }

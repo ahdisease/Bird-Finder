@@ -9,6 +9,7 @@ namespace Capstone.DAO
         List<BirdSighting> getSightings(int birdId);
         void deleteSighting(int  id);
         void editSighting(BirdSighting sighting, int id);
-        BirdSighting addSighting(BirdSighting birdSighting, int userId, int birdId, DateTime dateSighted);
+        BirdSighting addSighting(BirdSighting birdSighting, string username);
+        BirdSighting getBirdSighting(int id);
     }
 }
