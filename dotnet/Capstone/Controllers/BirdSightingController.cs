@@ -61,6 +61,12 @@ namespace Capstone.Controllers
         {
             birdSightingDao.editSighting(sighting, id);
         }
+         
+        [HttpDelete("/deleteNote/{id}")]
+        public void deleteSighting(int id)
+        {
+            birdSightingDao.deleteSighting(id);
+        }
 
 
 
