@@ -15,24 +15,24 @@
       /> -->
       <!-- <button id="upload-profile-image" v-on:click="updateImage">Upload</button> -->
       <label for="fav-bird">What is your favorite bird?</label>
-      <input
+      <select
         required
         id="fav-bird"
-        type="text"
-        size="50"
         v-model="profile.favoriteBird"
-      />
+      >
+        <option v-for="bird in birds" v-bind:key="bird.id" v-bind:value="bird">{{ bird.name }}</option>
+      </select>
 
       <label for="most-common-bird"
         >Tell us what bird you most commonly spot.</label
       >
-      <input
+      <select
         required
         id="most-common-bird"
-        type="text"
-        size="50"
         v-model="profile.mostCommonBird"
-      />
+      >
+      <option v-for="bird in birds" v-bind:key="bird.id" v-bind:value="bird">{{ bird.name }}</option>
+      </select>
 
       <label for="zip-code">Please enter your zip code:</label>
       <input
@@ -60,12 +60,14 @@
 
 <script>
 import profileService from "../services/ProfileService";
+import birdService from "../services/BirdService";
 export default {
   data() {
     return {
       profile: {
         username: this.$store.state.user.username,
       },
+      birds: [],
       displayForm: true,
       error: ''
     };
@@ -87,7 +89,19 @@ export default {
           this.error=err + " problem updating profile!";
         });
     },
+    getBirds() {
+      birdService
+        .getBirds()
+        .then((response) => {
+          if (response.status === 200) {
+              this.birds = response.data
+          }
+        })
+    }
   },
+  mounted() {
+    this.getBirds();
+  }
 };
 </script>
 
@@ -116,6 +130,7 @@ input[type="zip-code"] {
   width: 45%;
 }
 input,
+select,
 #skill-lvl {
   padding: 8px;
   border-radius: 8px;
@@ -134,5 +149,8 @@ input[type="submit"] {
   border-radius: 8px;
   border-left: 5px solid #ff9f1c;
   border-right: 5px solid #ff9f1c;
+}
+select {
+  width:45%;
 }
 </style>

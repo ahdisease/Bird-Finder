@@ -28,6 +28,10 @@ export default {
 
     getRandomBird() {
         return axios.get('/randomBird');
+    },
+
+    getBirds() {
+        return axios.get('/birds');
     }
 
     

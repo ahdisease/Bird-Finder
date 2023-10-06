@@ -35,6 +35,9 @@ node_modules
 /dist
 
 # Add any directories, files, or patterns you don't want to be tracked by version control
+#Rest Client
+**/REST
+*.rest
 
 # Eclipse
 .classpath

@@ -22,9 +22,10 @@ CREATE TABLE users (
 	salt varchar(200) NOT NULL,
 	user_role varchar(50) NOT NULL,
 	location varchar(50),
-	skill_level varchar(20) NOT NULL DEFAULT 'beginner',	--beginner, intermediate, pro
+	skill_level varchar(20) NOT NULL DEFAULT 'beginner',	--beginner, intermediate, advanced
 	favorite_bird int,
-	most_common_bird int
+	most_common_bird int,
+	profile_active bit NOT NULL DEFAULT 0
 
 	CONSTRAINT PK_user PRIMARY KEY (user_id)
 );
