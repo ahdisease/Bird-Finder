@@ -21,7 +21,7 @@ namespace Capstone.DAO
         }
 
 
-        public Bird createBird(Bird bird, string name, string description, string picture)
+        public Bird createBird(Bird bird)
         {
             Bird newBird = null;
 
@@ -36,9 +36,9 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@name", name);
-                    cmd.Parameters.AddWithValue("@description", description);
-                    cmd.Parameters.AddWithValue("@picture", picture);
+                    cmd.Parameters.AddWithValue("@name", bird.name);
+                    cmd.Parameters.AddWithValue("@description", bird.description);
+                    cmd.Parameters.AddWithValue("@picture", bird.imgUrl);
 
                     newBirdId = Convert.ToInt32(cmd.ExecuteScalar());
 

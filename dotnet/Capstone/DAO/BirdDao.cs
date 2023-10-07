@@ -9,7 +9,7 @@ namespace Capstone.DAO
         Bird getBird(int id);
         void deleteBird(int id);
         void editBird(Bird bird, int id);
-        Bird createBird(Bird bird, string name, string description, string picture);
+        Bird createBird(Bird bird);
         Bird getBirdByZip(string zipcode);
         Bird getRandomBird();
         

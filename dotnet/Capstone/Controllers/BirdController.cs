@@ -72,34 +72,88 @@ namespace Capstone.Controllers
         }
 
         [HttpPost("/birds")]
-        public void createBird(Bird newBird)
+        public IActionResult createBird(Bird newBird)
         {
-            //const string ErrorMessage = "An error occurred and user was not created.";
+            const string errorMessage = "An error occurred and a bird was not created.";
+            
+            IActionResult result;
             try
             {
-                Bird bird = birdDao.createBird(newBird, newBird.name, newBird.description, newBird.imgUrl);
-                if (bird == null)
-                {
-                    Console.WriteLine(StatusCode(404));
-                }
-            }catch (DaoException )
-            {
-                Console.WriteLine(StatusCode(500));
+                Bird bird = birdDao.createBird(newBird);
+
+                result = Created("", newBird);
             }
+            catch (DaoException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch (ArgumentException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch
+            {
+                result = BadRequest(new { message = errorMessage });
+            }
+
+            return result;
 
         }
 
         [HttpPut("/birds/{id}")]
-        public void editBird(Bird updatedBird, int id)
+        public IActionResult editBird(Bird updatedBird, int id)
         {
-            birdDao.editBird(updatedBird, id);
+            const string errorMessage = "An error occurred and bird could not be modified.";
+            IActionResult result;
+            try
+            {
+                birdDao.editBird(updatedBird, id);
+                result = Ok();
+            }
+            catch (DaoException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch (ArgumentException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch
+            {
+                result = BadRequest(new { message = errorMessage });
+            }
+
+
+            return result;
 
         }
 
         [HttpDelete("/birds/{id}")]
-        public void deleteBird(int id)
+        public IActionResult deleteBird(int id)
         {
-            birdDao.deleteBird(id);
+            
+            const string errorMessage = "An error occurred and bird could not be deleted.";
+            IActionResult result;
+            try
+            {
+                birdDao.deleteBird(id);
+                result = NoContent();
+            }
+            catch (DaoException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch (ArgumentException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch
+            {
+                result = BadRequest(new { message = errorMessage });
+            }
+
+
+            return result;
         }
 
     }
