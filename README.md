@@ -17,25 +17,25 @@ The diagram below describes the database schema. Currently there is no List item
 ## API Routes
 The following actions are available using the API:
 
-| HTTP Method | Endpoint URL[^1] | Status code | Returned Value |
-| :---: | :---: | :---: | :--- | 
-|**POST**|'/register'| 201 | ``` { "userId", "username", "role" } ``` |
-||| 409, 500 | ``` { "message" } ``` |
-|**POST**|'/login'| 200 | ``` { user: { "userId", "username", "role" }, "token" }``` |
-||| 409, 500 | ``` { "message" } ``` |
-|**GET**|'/profile'| 200 | ``` { "zipcode", "skillLevel", "favoriteBird", "mostCommonBird", "profileActive" } ``` |
-| || 404 | ``` { "message" } ``` |
-|**POST**|'/createProfile'| 201 | ``` { "zipcode", "skillLevel", "favoriteBird", "mostCommonBird", "profileActive" } ``` |
-|**PUT**|'/updateProfile'| 200 |  |
-|**DELETE**|'/deleteProfile'| 204 |  |
-|**DELETE**|'/deleteProfile'| 404 | ``` { "message" } ``` |
-|**GET**|'/birds'| N/A[^2] | ```[ { "id", "name", "description", "imgUrl" }, ... ]``` |
-| || | ``` [] ``` |
-|**GET**|'/birds/{id}'| N/A[^2] | ``` { "id", "name", "description", "imgUrl" } ``` |
-|**GET**|'/randomBird'| N/A[^2] | ``` { "id", "name", "description", "imgUrl" } ``` |
-|**POST**|'/birds'| N/A[^2] | |
-|**PUT**|'/birds/{id}'| N/A[^2] |  |
-|**DELETE**|'/bird/{id}'| N/A[^2] |  |
+| HTTP Method | Endpoint URL[^1] | Description | Status code | Returned Value |
+| :---: | :---: | :--- | :---: | :--- | 
+|**POST**|'/register'| Register a new user. | 201 | ``` { "userId", "username", "role" } ``` |
+|||| 409, 500 | ``` { "message" } ``` |
+|**POST**|'/login'| Request a JWT for authorization. | 200 | ``` { user: { "userId", "username", "role" }, "token" }``` |
+|||| 409, 500 | ``` { "message" } ``` |
+|**GET**|'/profile'| Request the current user's profile information. | 200 | ``` { "zipcode", "skillLevel", "favoriteBird", "mostCommonBird", "profileActive" } ``` |
+|||| 404 | ``` { "message" } ``` |
+|**POST**|'/createProfile'| Create a profile for the current user based on a JSON object in the body. Also reactivates a deleted profile. | 201 | ``` { "zipcode", "skillLevel", "favoriteBird", "mostCommonBird", "profileActive" } ``` |
+|**PUT**|'/updateProfile'| Updates a profile for the current user based on a JSON object in the body. Also recalculates the most_common_bird value. | 200 |  |
+|**DELETE**|'/deleteProfile'| Deactivates a profile for the current user. | 204 |  |
+|||| 404 | ``` { "message" } ``` |
+|**GET**|'/birds'| Get an array of all birds available in the database as JSON objects. | N/A[^2] | ```[ { "id", "name", "description", "imgUrl" }, ... ]``` |
+|||| | ``` [] ``` |
+|**GET**|'/birds/{id}'| Request a bird JSON object with a specific ID. | N/A[^2] | ``` { "id", "name", "description", "imgUrl" } ``` |
+|**GET**|'/randomBird'| Request a random bird JSON object. | N/A[^2] | ``` { "id", "name", "description", "imgUrl" } ``` |
+|**POST**|'/birds'| Create a bird from a JSON object in the body. | N/A[^2] | |
+|**PUT**|'/birds/{id}'| Update a bird from a JSON object in the body. | N/A[^2] |  |
+|**DELETE**|'/bird/{id}'| Delete a bird from the database with a specific ID. | N/A[^2] |  |
 
 [^1]: Endpoint URLs were chosen to match Vue frontend supplied by Tech Elevator.
 [^2]: Bird related actions currently return no status codes
