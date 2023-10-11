@@ -5,6 +5,41 @@ Bird Nerds is a hobby web app that allows users to post about birds they have se
 This project is built using C#/.NET and SQL Server for the back end API, and the Vue.js front end was provided as part of a Tech Elevator alumni project. In general, the front end has been left untouched in style, though minor structural edits may be made to adapt to the format of the back end API. Project partner:
 - [kimbambala](https://github.com/kimbambala)
 
+## Schema - WIP
+The diagram below describes the database schema. Currently there is no List item.
+
+<img
+    alt="Entity relationship diagram."
+    src="./screenshots/Bird_Nerd_ERD.png"
+    width=700
+/>
+
+## API Routes
+The following actions are available using the API:
+
+| HTTP Method | Endpoint URL[^1] | Status code | Returned Value |
+| :---: | :---: | :---: | :--- | 
+|**POST**|'/register'| 201 | ``` { "userId", "username", "role" } ``` |
+||| 409, 500 | ``` { "message" } ``` |
+|**POST**|'/login'| 200 | ``` { user: { "userId", "username", "role" }, "token" }``` |
+||| 409, 500 | ``` { "message" } ``` |
+|**GET**|'/profile'| 200 | ``` { "zipcode", "skillLevel", "favoriteBird", "mostCommonBird", "profileActive" } ``` |
+| || 404 | ``` { "message" } ``` |
+|**POST**|'/createProfile'| 201 | ``` { "zipcode", "skillLevel", "favoriteBird", "mostCommonBird", "profileActive" } ``` |
+|**PUT**|'/updateProfile'| 200 |  |
+|**DELETE**|'/deleteProfile'| 204 |  |
+|**DELETE**|'/deleteProfile'| 404 | ``` { "message" } ``` |
+|**GET**|'/birds'| N/A[^2] | ```[ { "id", "name", "description", "imgUrl" }, ... ]``` |
+| || | ``` [] ``` |
+|**GET**|'/birds/{id}'| N/A[^2] | ``` { "id", "name", "description", "imgUrl" } ``` |
+|**GET**|'/randomBird'| N/A[^2] | ``` { "id", "name", "description", "imgUrl" } ``` |
+|**POST**|'/birds'| N/A[^2] | |
+|**PUT**|'/birds/{id}'| N/A[^2] |  |
+|**DELETE**|'/bird/{id}'| N/A[^2] |  |
+
+[^1]: Endpoint URLs were chosen to match Vue frontend supplied by Tech Elevator.
+[^2]: Bird related actions currently return no status codes
+
 ## Profile creation
 An anonymous user arrives at the landing page as shown below:
 
@@ -32,7 +67,7 @@ After logging in, the user can navigate to their profile using the new button in
     width=700
 />
 
-When profiles are created, a skill level of 'beginner' is automatically assigned. A user can update their favorite bird, their zip code, and their skill level at any time[^1].
+When profiles are created, a skill level of 'beginner' is automatically assigned. A user can update their favorite bird, their zip code, and their skill level at any time[^3].
 
 <img
     alt="Screenshot of profile update form. Four questions: 1) What is your favorite bird? 2) Tell us what you most commonly spot. 3) Please enter your zip code: 4) What is your skill level? (Beginner, Intermediate, Advanced)"
@@ -40,7 +75,7 @@ When profiles are created, a skill level of 'beginner' is automatically assigned
     width=400
 />
 
-[^1]:WIP note: The back end API calculates the most common bird at the user's feeder on profile update. The front end currently includes a selection box, but it has no effect on the user's profile.
+[^3]:WIP note: The back end API calculates the most common bird at the user's feeder on profile update. The front end currently includes a selection box, but it has no effect on the user's profile.
 
 ## Building a List and Reporting a Bird
 WIP - this section is currently being constructed.
