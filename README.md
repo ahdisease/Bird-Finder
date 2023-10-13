@@ -6,7 +6,7 @@ This project is built using C#/.NET and SQL Server for the back end API, and the
 - [kimbambala](https://github.com/kimbambala)
 
 ## Schema - WIP
-The diagram below describes the database schema. Currently there is no List item.
+The diagram below describes the database schema.
 
 <img
     alt="Entity relationship diagram."
