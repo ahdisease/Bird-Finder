@@ -4,9 +4,9 @@ namespace Capstone.Models
 {
     public class BirdList
     {
-        public int id {  get; set; } 
-        public int userId { get; set; }
-        public string name { get; set; }
+        public int Id {  get; set; } 
+        public int UserId { get; set; }
+        public string Name { get; set; }
 
     }
 }

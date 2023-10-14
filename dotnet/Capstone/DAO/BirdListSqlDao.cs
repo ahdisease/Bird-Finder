@@ -34,7 +34,7 @@ namespace Capstone.DAO
                     conn.Open();
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@username", username);
-                    cmd.Parameters.AddWithValue("@name", list.name);
+                    cmd.Parameters.AddWithValue("@name", list.Name);
 
                     newListId = Convert.ToInt32(cmd.ExecuteScalar());
                 }
@@ -82,7 +82,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@id", id);
-                    cmd.Parameters.AddWithValue("name", list.name);
+                    cmd.Parameters.AddWithValue("name", list.Name);
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -194,9 +194,9 @@ namespace Capstone.DAO
         {
             BirdList birdList = new BirdList();
 
-            birdList.id = Convert.ToInt32(reader["id"]);
-            birdList.userId = Convert.ToInt32(reader["user_id"]);
-            birdList.name = Convert.ToString(reader["name"]);
+            birdList.Id = Convert.ToInt32(reader["id"]);
+            birdList.UserId = Convert.ToInt32(reader["user_id"]);
+            birdList.Name = Convert.ToString(reader["name"]);
             
             return birdList;
         }

@@ -78,7 +78,7 @@ namespace Capstone.Controllers
 
         }
         [HttpPut("/editNote/{id}")]
-        public IActionResult editSighting(BirdSighting sighting, int id)
+        public IActionResult editNote(BirdSighting sighting, int id)
         {
             
             const string errorMessage = "An error occurred and bird could not be modified.";
@@ -106,7 +106,7 @@ namespace Capstone.Controllers
         }
          
         [HttpDelete("/deleteNote/{id}")]
-        public IActionResult deleteSighting(int id)
+        public IActionResult deleteNote(int id)
         {
             
             const string errorMessage = "An error occurred and bird could not be deleted.";

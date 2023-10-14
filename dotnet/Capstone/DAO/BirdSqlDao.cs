@@ -72,9 +72,9 @@ namespace Capstone.DAO
                     SqlCommand cmd = new SqlCommand(sql, conn);
 
                     cmd.Parameters.AddWithValue("@list_id", listId);
-                    cmd.Parameters.AddWithValue("@name", bird.name);
-                    cmd.Parameters.AddWithValue("@picture", bird.imgUrl);
-                    cmd.Parameters.AddWithValue("@zip_code", bird.zipCode);
+                    cmd.Parameters.AddWithValue("@name", bird.Name);
+                    cmd.Parameters.AddWithValue("@picture", bird.ImgUrl);
+                    cmd.Parameters.AddWithValue("@zip_code", bird.ZipCode);
 
                     newBirdId = Convert.ToInt32(cmd.ExecuteScalar());
 
@@ -126,9 +126,9 @@ namespace Capstone.DAO
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@id", id);
                     //cmd.Parameters.AddWithValue("@listId", bird.listId);
-                    cmd.Parameters.AddWithValue("@name", bird.name);
-                    cmd.Parameters.AddWithValue("@picture", bird.imgUrl);
-                    cmd.Parameters.AddWithValue("@zip_code", bird.zipCode);
+                    cmd.Parameters.AddWithValue("@name", bird.Name);
+                    cmd.Parameters.AddWithValue("@picture", bird.ImgUrl);
+                    cmd.Parameters.AddWithValue("@zip_code", bird.ZipCode);
 
                     SqlDataReader reader = cmd.ExecuteReader();
                 }
@@ -265,11 +265,11 @@ namespace Capstone.DAO
         private Bird MapRowToBird(SqlDataReader reader)
         {
             Bird bird = new Bird();
-            bird.id = Convert.ToInt32(reader["id"]); 
-            bird.listId = Convert.ToInt32(reader["list_id"]);
-            bird.name = Convert.ToString(reader["name"]);
-            bird.imgUrl = Convert.ToString(reader["picture"]);
-            bird.zipCode = Convert.ToString(reader["zip_code"]);
+            bird.Id = Convert.ToInt32(reader["id"]); 
+            bird.ListId = Convert.ToInt32(reader["list_id"]);
+            bird.Name = Convert.ToString(reader["name"]);
+            bird.ImgUrl = Convert.ToString(reader["picture"]);
+            bird.ZipCode = Convert.ToString(reader["zip_code"]);
 
             return bird;
         }

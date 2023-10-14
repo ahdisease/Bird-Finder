@@ -13,11 +13,11 @@ namespace Capstone.Controllers
     public class BirdController : ControllerBase
     {
         private readonly BirdDao birdDao;
-        private readonly IBirdListDao birdListDao;
-        public BirdController(BirdDao birdDao, IBirdListDao birdListDao)
+        
+        public BirdController(BirdDao birdDao)
         {
             this.birdDao = birdDao;
-            this.birdListDao = birdListDao;
+            
             
         }
 
