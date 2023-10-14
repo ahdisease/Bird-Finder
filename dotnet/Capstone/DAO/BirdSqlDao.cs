@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Reflection.Emit;
 using System.Security.Policy;
 using System.Xml.Linq;
 
@@ -25,8 +26,8 @@ namespace Capstone.DAO
         {
             Bird newBird = null;
 
-            String sql = "INSERT INTO bird(name, description, picture) " +
-                "VALUES(@name, @description, @picture)";
+            String sql = "INSERT INTO bird(list_id, name, picture, zip_code) " +
+                "VALUES(@list_id, @name, @picture, @zip_code)";
 
             int newBirdId = 0;
             try
@@ -36,9 +37,11 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
+
+                    cmd.Parameters.AddWithValue("@listId", bird.listId);
                     cmd.Parameters.AddWithValue("@name", bird.name);
-                    cmd.Parameters.AddWithValue("@description", bird.description);
                     cmd.Parameters.AddWithValue("@picture", bird.imgUrl);
+                    cmd.Parameters.AddWithValue("@zip_code", bird.zipCode);
 
                     newBirdId = Convert.ToInt32(cmd.ExecuteScalar());
 
@@ -79,7 +82,7 @@ namespace Capstone.DAO
 
         public void editBird(Bird bird, int id)
         {
-            string sql = "UPDATE bird SET name = @name, description = @description, picture = @picture WHERE id = @id";
+            string sql = "UPDATE bird SET list_id = @list_id, name = @name, picture = @picture, zip_code = @zip_code WHERE id = @id";
 
             try
             {
@@ -89,9 +92,10 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Parameters.AddWithValue("@listId", bird.listId);
                     cmd.Parameters.AddWithValue("@name", bird.name);
-                    cmd.Parameters.AddWithValue("@description", bird.description);
                     cmd.Parameters.AddWithValue("@picture", bird.imgUrl);
+                    cmd.Parameters.AddWithValue("@zip_code", bird.zipCode);
 
                     SqlDataReader reader = cmd.ExecuteReader();
                 }
@@ -106,7 +110,7 @@ namespace Capstone.DAO
         public Bird getBird(int id)
         {
             Bird bird = null;
-            string sql = "SELECT id, name, description, picture FROM bird WHERE id = @id ";
+            string sql = "SELECT id, list_id, name, picture, zip_code FROM bird WHERE id = @id ";
 
             try
             {
@@ -170,7 +174,7 @@ namespace Capstone.DAO
         {
             List<Bird> birdList = new List<Bird>();
 
-            string sql = "SELECT id, name, description, picture FROM bird";
+            string sql = "SELECT id, list_id, name, picture, zip_code FROM bird";
 
             try
             {
@@ -199,11 +203,12 @@ namespace Capstone.DAO
         private Bird MapRowToBird(SqlDataReader reader)
         {
             Bird bird = new Bird();
-            bird.id = Convert.ToInt32(reader["id"]);
+            bird.id = Convert.ToInt32(reader["id"]); 
+            bird.listId = Convert.ToInt32(reader["list_id"]);
             bird.name = Convert.ToString(reader["name"]);
-            bird.description = Convert.ToString(reader["description"]);
             bird.imgUrl = Convert.ToString(reader["picture"]);
-         
+            bird.zipCode = Convert.ToString(reader["zip_code"]);
+
             return bird;
         }
     }
