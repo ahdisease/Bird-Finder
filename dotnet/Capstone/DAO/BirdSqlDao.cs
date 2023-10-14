@@ -13,16 +13,49 @@ namespace Capstone.DAO
     public class BirdSqlDao : BirdDao
     {
         private readonly string connectionString;
+        private readonly IBirdListDao birdListDao;
        
 
         public BirdSqlDao(string dbConnectionString)
         {
             connectionString = dbConnectionString;
+            this.birdListDao = new BirdListSqlDao(connectionString);
             
         }
 
+        public List<Bird> getBirdsInList(int listId)
+        {
+            List<Bird> birdList = new List<Bird>();
 
-        public Bird createBird(Bird bird)
+            string sql = "SELECT id, list_id, name, picture, zip_code FROM bird WHERE list_id = @list_id";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@list_id", listId);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    
+                    while (reader.Read())
+                    {
+                        Bird bird = MapRowToBird(reader);
+                        birdList.Add(bird);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("SQL exception occurred", ex);
+            }
+
+            return birdList;
+        }
+
+        public Bird createBird(Bird bird, int listId)
         {
             Bird newBird = null;
 
@@ -38,7 +71,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
 
-                    cmd.Parameters.AddWithValue("@listId", bird.listId);
+                    cmd.Parameters.AddWithValue("@list_id", listId);
                     cmd.Parameters.AddWithValue("@name", bird.name);
                     cmd.Parameters.AddWithValue("@picture", bird.imgUrl);
                     cmd.Parameters.AddWithValue("@zip_code", bird.zipCode);
@@ -82,7 +115,7 @@ namespace Capstone.DAO
 
         public void editBird(Bird bird, int id)
         {
-            string sql = "UPDATE bird SET list_id = @list_id, name = @name, picture = @picture, zip_code = @zip_code WHERE id = @id";
+            string sql = "UPDATE bird SET name = @name, picture = @picture, zip_code = @zip_code WHERE id = @id";
 
             try
             {
@@ -92,7 +125,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@id", id);
-                    cmd.Parameters.AddWithValue("@listId", bird.listId);
+                    //cmd.Parameters.AddWithValue("@listId", bird.listId);
                     cmd.Parameters.AddWithValue("@name", bird.name);
                     cmd.Parameters.AddWithValue("@picture", bird.imgUrl);
                     cmd.Parameters.AddWithValue("@zip_code", bird.zipCode);
@@ -136,10 +169,39 @@ namespace Capstone.DAO
             return bird;
         }
 
-        public Bird getBirdByZip(string zipcode)
+        public List<Bird> getBirdByZip(string zipCode)
         {
-            throw new System.NotImplementedException();
+            List<Bird> birdList = new List<Bird>();
+
+            string sql = "SELECT id, list_id, name, picture, zip_code FROM bird WHERE zip_code = @zip_code";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@zip_code", zipCode);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        Bird bird = MapRowToBird(reader);
+                        birdList.Add(bird);
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("SQL exception occurred", ex);
+            }
+
+            return birdList;
         }
+
+
 
         public Bird getRandomBird()
         {
@@ -170,7 +232,7 @@ namespace Capstone.DAO
             return randomBird;
         }
 
-        public List<Bird> listAllBirds()
+        public List<Bird> getBirds()
         {
             List<Bird> birdList = new List<Bird>();
 

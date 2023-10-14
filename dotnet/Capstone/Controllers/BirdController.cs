@@ -13,9 +13,11 @@ namespace Capstone.Controllers
     public class BirdController : ControllerBase
     {
         private readonly BirdDao birdDao;
-        public BirdController(BirdDao birdDao)
+        private readonly IBirdListDao birdListDao;
+        public BirdController(BirdDao birdDao, IBirdListDao birdListDao)
         {
             this.birdDao = birdDao;
+            this.birdListDao = birdListDao;
             
         }
 
@@ -30,7 +32,7 @@ namespace Capstone.Controllers
         [HttpGet("/birds")]
         public List<Bird> ListAllBirds()
         {
-            List<Bird> birdList = birdDao.listAllBirds();
+            List<Bird> birdList = birdDao.getBirds();
 
             if (birdList == null)
             {
@@ -41,7 +43,7 @@ namespace Capstone.Controllers
             
         }
 
-        [HttpGet("/birds/{id}")]
+        [HttpGet("/bird/{id}")]
         public Bird getBird(int id)
         {
             Bird bird = birdDao.getBird(id);
@@ -71,17 +73,17 @@ namespace Capstone.Controllers
             return randomBird;
         }
 
-        [HttpPost("/birds")]
-        public IActionResult createBird(Bird newBird)
+        [HttpPost("/lists/{listId}/addBird")]
+        public IActionResult createBird([FromBody] Bird newBird, int listId)
         {
             const string errorMessage = "An error occurred and a bird was not created.";
             
             IActionResult result;
             try
             {
-                Bird bird = birdDao.createBird(newBird);
+                Bird bird = birdDao.createBird(newBird, listId);
 
-                result = Created("", newBird);
+                result = Created("", "");
             }
             catch (DaoException e)
             {
@@ -100,7 +102,7 @@ namespace Capstone.Controllers
 
         }
 
-        [HttpPut("/birds/{id}")]
+        [HttpPut("/updateBird/{id}")]
         public IActionResult editBird(Bird updatedBird, int id)
         {
             const string errorMessage = "An error occurred and bird could not be modified.";
@@ -128,7 +130,7 @@ namespace Capstone.Controllers
 
         }
 
-        [HttpDelete("/birds/{id}")]
+        [HttpDelete("/deleteBird/{id}")]
         public IActionResult deleteBird(int id)
         {
             
@@ -154,6 +156,34 @@ namespace Capstone.Controllers
 
 
             return result;
+        }
+
+ 
+
+
+        [HttpGet("/lists/{listId}/birds")]
+        public List<Bird> getBirdsInList(int listId)
+        {
+            List<Bird> birdList = birdDao.getBirdsInList(listId);
+            if (birdList == null)
+            {
+                Console.WriteLine("No bird in this list");
+            }
+
+            return birdList;
+        }
+
+
+        [HttpGet("/birds/{zipCode}")]
+        public List<Bird> getBirdByZip(string zipCode)
+        {
+            List<Bird> birdList = birdDao.getBirdByZip(zipCode);
+            if (birdList == null)
+            {
+                Console.WriteLine("No bird in this zip code");
+            }
+
+            return birdList;
         }
 
     }

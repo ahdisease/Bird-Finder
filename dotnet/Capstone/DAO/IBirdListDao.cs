@@ -10,6 +10,7 @@ namespace Capstone.DAO
         BirdList createList(BirdList list, string username);
         void editList(BirdList list, int id);
         void deleteList(int id);
+        int getListIdByListName(string name);
 
 
     }

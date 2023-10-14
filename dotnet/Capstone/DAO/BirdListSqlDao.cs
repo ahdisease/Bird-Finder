@@ -158,6 +158,38 @@ namespace Capstone.DAO
             return birdList;
         }
 
+        public int getListIdByListName(string name)
+        {
+            int listId = 0;
+
+            string sql = "SELECT id FROM list WHERE name = @name";
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@name", name);
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        listId = Convert.ToInt32(reader["id"]);
+                    }
+
+                }
+            }
+            catch (SqlException ex)
+            {
+                throw new DaoException("SQL exception occurred", ex);
+            }
+
+
+            return listId;
+        }
+
         private BirdList MapRowToBirdList(SqlDataReader reader)
         {
             BirdList birdList = new BirdList();
