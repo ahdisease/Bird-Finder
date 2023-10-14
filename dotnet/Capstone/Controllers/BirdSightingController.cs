@@ -21,7 +21,7 @@ namespace Capstone.Controllers
         }
 
         [HttpGet("/birds/{birdId}/notes")]
-        public List<BirdSighting> ListAllBirds(int birdId)
+        public List<BirdSighting> getNotes(int birdId)
         {
             List<BirdSighting> sightingList = birdSightingDao.getSightings(birdId);
 
@@ -34,21 +34,31 @@ namespace Capstone.Controllers
 
         }
 
-        [HttpPost("/newNote")]
-        public IActionResult addSighting( BirdSighting newBirdSighting)
+        [HttpGet("/note/{id}")]
+        public BirdSighting getNote(int id)
         {
+            BirdSighting sighting = birdSightingDao.getBirdSighting(id);
 
-            IIdentity user = User.Identity;
-            
+            if (sighting == null)
+            {
+                Console.WriteLine("No bird");
+            }
 
+            return sighting;
+
+        }
+
+        [HttpPost("/newNote/{birdId}")]
+        public IActionResult addNote([FromBody] BirdSighting newBirdSighting, int birdId)
+        {
             const string errorMessage = "An error occurred and a bird was not created.";
 
             IActionResult result;
             try
             {
-                BirdSighting birdSighting = birdSightingDao.addSighting(newBirdSighting, user.Name);
+                BirdSighting birdSighting = birdSightingDao.addSighting(newBirdSighting, birdId);
 
-                result = Created("", newBirdSighting);
+                result = Created("", "");
             }
             catch (DaoException e)
             {

@@ -76,7 +76,7 @@ namespace Capstone.Controllers
         [HttpPost("/lists/{listId}/addBird")]
         public IActionResult createBird([FromBody] Bird newBird, int listId)
         {
-            const string errorMessage = "An error occurred and a bird was not created.";
+            const string errorMessage = "An error occurred and a bird sighting was not created.";
             
             IActionResult result;
             try

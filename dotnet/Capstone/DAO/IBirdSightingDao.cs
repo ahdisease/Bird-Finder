@@ -7,9 +7,9 @@ namespace Capstone.DAO
     public interface IBirdSightingDao
     {
         List<BirdSighting> getSightings(int birdId);
-        void deleteSighting(int  id);
+        void deleteSighting(int id);
         void editSighting(BirdSighting sighting, int id);
-        BirdSighting addSighting(BirdSighting birdSighting, string username);
+        BirdSighting addSighting(BirdSighting birdSighting, int birdId);
         BirdSighting getBirdSighting(int id);
     }
 }
