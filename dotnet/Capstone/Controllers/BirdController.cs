@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Net.Mail;
 
 namespace Capstone.Controllers
 {
@@ -44,18 +45,31 @@ namespace Capstone.Controllers
         }
 
         [HttpGet("/bird/{id}")]
-        public Bird getBird(int id)
+        public IActionResult getBird(int id)
         {
-            Bird bird = birdDao.getBird(id);
-           // const string ErrorMessage = "No bird matches this id.";
-
-            if (bird == null)
+            
+            const string errorMessage = "No bird matches this id.";
+            IActionResult result;
+            try
             {
-                Console.WriteLine("No bird matches this id");
-                //return StatusCode(404, ErrorMessage);
+                Bird bird = birdDao.getBird(id);
+
+                if (bird != null)
+                {
+                    result = Ok(bird);
+                }
+                else
+                {
+                    result = NotFound(new { message = errorMessage });
+                }
             }
-      
-            return bird;
+            catch(DaoException e)
+            {
+                result = NotFound(new { message = e.Message });
+            }
+
+
+            return result;
             
         }
 

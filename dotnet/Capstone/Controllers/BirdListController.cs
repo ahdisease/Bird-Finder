@@ -22,16 +22,31 @@ namespace Capstone.Controllers
 
 
         [HttpGet("/lists/{id}")]
-        public BirdList getList(int id)
+        public IActionResult getList(int id)
         {
-            BirdList birdList = birdListDao.getList(id);
+            const string errorMessage = "No bird matches this id.";
+            IActionResult result;
 
-            if (birdList == null)
+            try
             {
-                Console.WriteLine("No bird matches this id");
+                BirdList birdList = birdListDao.getList(id);
+
+                if (birdList != null)
+                {
+                    result = Ok(birdList);
+                }
+                else
+                {
+                    result = NotFound(new { message = errorMessage });
+                }
+            }
+            catch (DaoException e)
+            {
+                result = NotFound(new { message = e.Message });
             }
 
-            return birdList;
+
+            return result;
 
         }
 
@@ -106,7 +121,7 @@ namespace Capstone.Controllers
 
 
         [HttpPost("/createList")]
-        public IActionResult createList([FromBody] BirdList newList, string username)
+        public IActionResult createList([FromBody] BirdList newList)
         {
             IIdentity user = User.Identity;
 

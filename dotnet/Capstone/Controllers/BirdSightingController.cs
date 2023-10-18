@@ -48,15 +48,15 @@ namespace Capstone.Controllers
 
         }
 
-        [HttpPost("/newNote/{birdId}")]
-        public IActionResult addNote([FromBody] BirdSighting newBirdSighting, int birdId)
+        [HttpPost("/newNote")]
+        public IActionResult addNote([FromBody] BirdSighting newBirdSighting)
         {
             const string errorMessage = "An error occurred and a bird was not created.";
 
             IActionResult result;
             try
             {
-                BirdSighting birdSighting = birdSightingDao.addSighting(newBirdSighting, birdId);
+                BirdSighting birdSighting = birdSightingDao.addSighting(newBirdSighting, newBirdSighting.BirdId);
 
                 result = Created("", "");
             }
@@ -77,7 +77,7 @@ namespace Capstone.Controllers
 
 
         }
-        [HttpPut("/editNote/{id}")]
+        [HttpPut("/editNote")]
         public IActionResult editNote(BirdSighting sighting, int id)
         {
             
