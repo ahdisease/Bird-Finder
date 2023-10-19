@@ -2,6 +2,7 @@
 using Capstone.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.SqlClient;
 
 namespace Capstone.DAO
@@ -48,9 +49,11 @@ namespace Capstone.DAO
             return newBirdList;
         }
 
-        public void deleteList(int id)
+        public void deleteList(int listId)
         {
-            string sql = "DELETE FROM list WHERE id = @id";
+            
+
+            string sql = "DELETE FROM bird WHERE list_id  =  @list_id; DELETE FROM list WHERE id = @id";
 
             try
             {
@@ -58,10 +61,13 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
+
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Parameters.AddWithValue("@id", listId);
+                    cmd.Parameters.AddWithValue("@list_id", listId);
 
                     SqlDataReader reader = cmd.ExecuteReader();
+                    
                 }
             }
             catch(SqlException ex)
@@ -70,7 +76,7 @@ namespace Capstone.DAO
             }
         }
 
-        public void editList(BirdList list, int id)
+        public void editList(BirdList list, int listId)
         {
             string sql = "UPDATE list SET name = @name WHERE id = @id";
 
@@ -81,7 +87,7 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Parameters.AddWithValue("@id", listId);
                     cmd.Parameters.AddWithValue("name", list.ListName);
 
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -127,7 +133,7 @@ namespace Capstone.DAO
             return birdLists;
         }
 
-        public BirdList getList(int id)
+        public BirdList getList(int listId)
         {
             BirdList birdList = null;
 
@@ -140,7 +146,7 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Parameters.AddWithValue("@id", listId);
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     if (reader.Read())

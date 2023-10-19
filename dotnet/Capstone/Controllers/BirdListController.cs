@@ -21,15 +21,15 @@ namespace Capstone.Controllers
 
 
 
-        [HttpGet("/lists/{id}")]
-        public IActionResult getList(int id)
+        [HttpGet("/lists/{listId}")]
+        public IActionResult getList(int listId)
         {
             const string errorMessage = "No bird matches this id.";
             IActionResult result;
 
             try
             {
-                BirdList birdList = birdListDao.getList(id);
+                BirdList birdList = birdListDao.getList(listId);
 
                 if (birdList != null)
                 {
@@ -51,7 +51,7 @@ namespace Capstone.Controllers
         }
 
 
-        [HttpGet("/lists")]
+        [HttpGet("/lists/")]
         public List<BirdList> getAllLists()
         {
             IIdentity user = User.Identity;
@@ -67,8 +67,8 @@ namespace Capstone.Controllers
         }
 
 
-        [HttpPut("/editList/{id}")]
-        public IActionResult editList(BirdList list, int id)
+        [HttpPut("/editList/{listId}")]
+        public IActionResult editList(BirdList list, int listId)
         {
             const string errorMessage = "An error occurred and list could not be modified.";
             
@@ -76,7 +76,7 @@ namespace Capstone.Controllers
 
             try
             {
-                birdListDao.editList(list, id);
+                birdListDao.editList(list, listId);
                 result = Ok();
             }
             catch(ArgumentException e)
@@ -92,8 +92,8 @@ namespace Capstone.Controllers
         }
 
 
-        [HttpDelete("/deleteList/{id}")]
-        public IActionResult deleteList(int id)
+        [HttpDelete("/deleteList/{listId}")]
+        public IActionResult deleteList(int listId)
         {
             const string errorMessage = "An error occurred and list could not be deleted.";
 
@@ -101,7 +101,8 @@ namespace Capstone.Controllers
 
             try
             {
-                birdListDao.deleteList(id);
+                birdListDao.deleteList(listId); 
+
                 result = NoContent();
             }
             catch (DaoException e)
