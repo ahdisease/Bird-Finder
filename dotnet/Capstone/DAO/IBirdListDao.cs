@@ -6,7 +6,7 @@ namespace Capstone.DAO
     public interface IBirdListDao
     {
         BirdList getList(int id);
-        List<BirdList> getAllLists();
+        List<BirdList> getAllLists(string username);
         BirdList createList(BirdList list, string username);
         void editList(BirdList list, int id);
         void deleteList(int id);

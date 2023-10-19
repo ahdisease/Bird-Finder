@@ -11,19 +11,19 @@ namespace Capstone.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class BirdSightingController : ControllerBase
+    public class BirdNoteController : ControllerBase
     {
-        private readonly IBirdSightingDao birdSightingDao;
-        public BirdSightingController(IBirdSightingDao birdSightingDao)
+        private readonly IBirdNoteDao birdSightingDao;
+        public BirdNoteController(IBirdNoteDao birdSightingDao)
         {
             this.birdSightingDao = birdSightingDao;
 
         }
 
-        [HttpGet("/birds/{birdId}/notes")]
-        public List<BirdSighting> getNotes(int birdId)
+        [HttpGet("/bird/{birdId}/notes")]
+        public List<BirdNote> getNotes(int birdId)
         {
-            List<BirdSighting> sightingList = birdSightingDao.getSightings(birdId);
+            List<BirdNote> sightingList = birdSightingDao.getSightings(birdId);
 
             if (sightingList == null)
             {
@@ -34,10 +34,10 @@ namespace Capstone.Controllers
 
         }
 
-        [HttpGet("/note/{id}")]
-        public BirdSighting getNote(int id)
+        [HttpGet("/note")]
+        public BirdNote getNote(int id)
         {
-            BirdSighting sighting = birdSightingDao.getBirdSighting(id);
+            BirdNote sighting = birdSightingDao.getBirdSighting(id);
 
             if (sighting == null)
             {
@@ -49,14 +49,14 @@ namespace Capstone.Controllers
         }
 
         [HttpPost("/newNote")]
-        public IActionResult addNote([FromBody] BirdSighting newBirdSighting)
+        public IActionResult addNote([FromBody] BirdNote newBirdSighting)
         {
             const string errorMessage = "An error occurred and a bird was not created.";
 
             IActionResult result;
             try
             {
-                BirdSighting birdSighting = birdSightingDao.addSighting(newBirdSighting, newBirdSighting.BirdId);
+                BirdNote birdSighting = birdSightingDao.addSighting(newBirdSighting, newBirdSighting.BirdId);
 
                 result = Created("", "");
             }
@@ -78,7 +78,7 @@ namespace Capstone.Controllers
 
         }
         [HttpPut("/editNote")]
-        public IActionResult editNote(BirdSighting sighting, int id)
+        public IActionResult editNote(BirdNote sighting, int id)
         {
             
             const string errorMessage = "An error occurred and bird could not be modified.";

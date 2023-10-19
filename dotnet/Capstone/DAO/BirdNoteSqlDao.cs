@@ -7,23 +7,23 @@ using System.Xml.Linq;
 
 namespace Capstone.DAO
 {
-    public class BirdSightingSqlDao : IBirdSightingDao
+    public class BirdNoteSqlDao : IBirdNoteDao
 
     {
         private readonly string connectionString;
 
         private readonly IUserDao userDao;
 
-        public BirdSightingSqlDao(string connectionString)
+        public BirdNoteSqlDao(string connectionString)
         {
             this.connectionString = connectionString;
             this.userDao = new UserSqlDao(connectionString);
         }
 
 
-        public BirdSighting addSighting(BirdSighting birdSighting, int birdId)
+        public BirdNote addSighting(BirdNote birdSighting, int birdId)
         {
-            BirdSighting newSighting = null;
+            BirdNote newSighting = null;
 
             String sql = "INSERT INTO bird_sighting(bird_id, date_sighted, males_spotted, females_spotted, feeder_type, food_blend, notes) VALUES( @bird_id, @date_sighted, @males_spotted, @females_spotted, @feeder_type, @food_blend, @notes)";
 
@@ -36,9 +36,9 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@bird_id", birdId);
-                    cmd.Parameters.AddWithValue("@date_sighted", birdSighting.DateSighted);
-                    cmd.Parameters.AddWithValue("@males_spotted", birdSighting.MalesSpotted);
-                    cmd.Parameters.AddWithValue("@females_spotted", birdSighting.FemalesSpotted);
+                    cmd.Parameters.AddWithValue("@date_sighted", birdSighting.DateSpotted);
+                    cmd.Parameters.AddWithValue("@males_spotted", birdSighting.NumMales);
+                    cmd.Parameters.AddWithValue("@females_spotted", birdSighting.NumFemales);
                     cmd.Parameters.AddWithValue("@feeder_type", birdSighting.FeederType);
                     cmd.Parameters.AddWithValue("@food_blend", birdSighting.FoodBlend);
                     cmd.Parameters.AddWithValue("@notes", birdSighting.Notes);
@@ -79,7 +79,7 @@ namespace Capstone.DAO
             }
         }
 
-        public void editSighting(BirdSighting birdSighting, int id)
+        public void editSighting(BirdNote birdSighting, int id)
         {
             string sql = "UPDATE bird_sighting SET date_sighted = @date_sighted, males_spotted = @males_spotted, females_spotted = @females_spotted, feeder_type = @feeder_type, food_blend = @food_blend, notes = @notes WHERE id = @id";
 
@@ -92,9 +92,9 @@ namespace Capstone.DAO
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@id", id);
                     //cmd.Parameters.AddWithValue("@bird_id", birdSighting.BirdId);
-                    cmd.Parameters.AddWithValue("@date_sighted", birdSighting.DateSighted);
-                    cmd.Parameters.AddWithValue("@males_spotted", birdSighting.MalesSpotted);
-                    cmd.Parameters.AddWithValue("@females_spotted", birdSighting.FemalesSpotted);
+                    cmd.Parameters.AddWithValue("@date_sighted", birdSighting.DateSpotted);
+                    cmd.Parameters.AddWithValue("@males_spotted", birdSighting.NumMales);
+                    cmd.Parameters.AddWithValue("@females_spotted", birdSighting.NumFemales);
                     cmd.Parameters.AddWithValue("@feeder_type", birdSighting.FeederType);
                     cmd.Parameters.AddWithValue("@food_blend", birdSighting.FoodBlend);
                     cmd.Parameters.AddWithValue("@notes", birdSighting.Notes);
@@ -108,9 +108,9 @@ namespace Capstone.DAO
             }
         }
 
-        public BirdSighting getBirdSighting(int id)
+        public BirdNote getBirdSighting(int id)
         {
-            BirdSighting birdSighting = null;
+            BirdNote birdSighting = null;
             string sql = "SELECT id, bird_id, date_sighted, males_spotted, females_spotted, feeder_type, food_blend, notes FROM bird_sighting WHERE id = @id";
 
             try
@@ -137,9 +137,9 @@ namespace Capstone.DAO
             return birdSighting;
         }
 
-        public List<BirdSighting> getSightings(int birdId)
+        public List<BirdNote> getSightings(int birdId)
         {
-            List<BirdSighting> sightingList = new List<BirdSighting>();
+            List<BirdNote> sightingList = new List<BirdNote>();
 
             string sql = "SELECT id, bird_id, date_sighted, males_spotted, females_spotted, feeder_type, food_blend, notes FROM bird_sighting WHERE bird_id = @bird_id";
 
@@ -155,7 +155,7 @@ namespace Capstone.DAO
 
                     while (reader.Read())
                     {
-                        BirdSighting birdSighting = MapRowToBirdSighting(reader);
+                        BirdNote birdSighting = MapRowToBirdSighting(reader);
                         sightingList.Add(birdSighting);
                     }
                 }
@@ -168,17 +168,17 @@ namespace Capstone.DAO
             return sightingList;
         }
 
-        private BirdSighting MapRowToBirdSighting(SqlDataReader reader)
+        private BirdNote MapRowToBirdSighting(SqlDataReader reader)
         {
-            BirdSighting birdSighting = new BirdSighting();
-            birdSighting.Id = Convert.ToInt32(reader["id"]);
+            BirdNote birdSighting = new BirdNote();
+            birdSighting.NoteId = Convert.ToInt32(reader["id"]);
             birdSighting.BirdId = Convert.ToInt32(reader["bird_id"]);
-            birdSighting.DateSighted = Convert.ToDateTime(reader[("date_sighted")]);
-            birdSighting.MalesSpotted = Convert.ToInt32(reader["males_spotted"]);
-            birdSighting.FemalesSpotted = Convert.ToInt32(reader["females_spotted"]);
+            birdSighting.DateSpotted = Convert.ToDateTime(reader[("date_sighted")]);
+            birdSighting.NumMales = Convert.ToInt32(reader["males_spotted"]);
+            birdSighting.NumFemales = Convert.ToInt32(reader["females_spotted"]);
             birdSighting.FeederType = Convert.ToString(reader["feeder_type"]);
             birdSighting.FoodBlend = Convert.ToString(reader["food_blend"]);
-            birdSighting.Notes= Convert.ToString(reader["notes"]);
+            birdSighting.Notes = Convert.ToString(reader["notes"]);
 
             return birdSighting;
         }

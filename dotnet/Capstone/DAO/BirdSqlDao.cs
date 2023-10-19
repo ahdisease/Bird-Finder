@@ -72,7 +72,7 @@ namespace Capstone.DAO
                     SqlCommand cmd = new SqlCommand(sql, conn);
 
                     cmd.Parameters.AddWithValue("@list_id", listId);
-                    cmd.Parameters.AddWithValue("@name", bird.Name);
+                    cmd.Parameters.AddWithValue("@name", bird.BirdName);
                     cmd.Parameters.AddWithValue("@picture", bird.ImgUrl);
                     cmd.Parameters.AddWithValue("@zip_code", bird.ZipCode);
 
@@ -126,7 +126,7 @@ namespace Capstone.DAO
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@id", id);
                     //cmd.Parameters.AddWithValue("@listId", bird.listId);
-                    cmd.Parameters.AddWithValue("@name", bird.Name);
+                    cmd.Parameters.AddWithValue("@name", bird.BirdName);
                     cmd.Parameters.AddWithValue("@picture", bird.ImgUrl);
                     cmd.Parameters.AddWithValue("@zip_code", bird.ZipCode);
 
@@ -265,9 +265,9 @@ namespace Capstone.DAO
         private Bird MapRowToBird(SqlDataReader reader)
         {
             Bird bird = new Bird();
-            bird.Id = Convert.ToInt32(reader["id"]); 
+            bird.BirdId = Convert.ToInt32(reader["id"]); 
             bird.ListId = Convert.ToInt32(reader["list_id"]);
-            bird.Name = Convert.ToString(reader["name"]);
+            bird.BirdName = Convert.ToString(reader["name"]);
             bird.ImgUrl = Convert.ToString(reader["picture"]);
             bird.ZipCode = Convert.ToString(reader["zip_code"]);
 

@@ -90,7 +90,7 @@ namespace Capstone.DAO
             {
                 sqlSet += ", users.skill_level = @skill_level";
             }
-            if (profile.FavoriteBird.Id > 0)
+            if (profile.FavoriteBird.BirdId > 0)
             {
                 sqlSet += ", users.favorite_bird = @favorite_bird"; 
             }
@@ -121,7 +121,7 @@ namespace Capstone.DAO
                     }
                     if (sql.Contains("@favorite_bird"))
                     {
-                        command.Parameters.AddWithValue("@favorite_bird", profile.FavoriteBird.Id);
+                        command.Parameters.AddWithValue("@favorite_bird", profile.FavoriteBird.BirdId);
 
                     }
 

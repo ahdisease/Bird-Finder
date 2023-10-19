@@ -54,8 +54,9 @@ namespace Capstone.Controllers
         [HttpGet("/lists")]
         public List<BirdList> getAllLists()
         {
-                
-            List<BirdList> birdList = birdListDao.getAllLists();
+            IIdentity user = User.Identity;
+
+            List<BirdList> birdList = birdListDao.getAllLists(user.Name);
 
             if (birdList == null)
             {

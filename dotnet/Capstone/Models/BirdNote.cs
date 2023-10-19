@@ -2,13 +2,13 @@
 
 namespace Capstone.Models
 {
-    public class BirdSighting
+    public class BirdNote
     {
-        public int Id {  get; set; }
+        public int NoteId {  get; set; }
         public int BirdId {  get; set; }
-        public DateTime DateSighted { get; set; }
-        public int MalesSpotted { get; set; }   
-        public int FemalesSpotted { get; set; }
+        public DateTime DateSpotted { get; set; }
+        public int NumMales { get; set; }   
+        public int NumFemales { get; set; }
         public string FeederType {  get; set; }
         public string FoodBlend { get; set; }
         public string Notes {  get; set; }
