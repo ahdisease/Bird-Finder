@@ -1,5 +1,5 @@
 <template>
-  <div v-show="displayForm === true" id="profile-form">
+  <div v-show="displayForm === true" id="profile-form-edit">
     <form v-on:submit.prevent="editProfile">
       <!-- to do: make this so it can swap the image dynamically when they upload -->
       <!-- <img v-bind:src="profile.profileImg" id="profile-img" /> -->
