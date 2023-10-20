@@ -78,21 +78,28 @@ namespace Capstone.DAO
 
             //build sql command based on given parameters. Most common bird is always calculated for username.
             string sql =    "UPDATE users";
-            string sqlSet =     " SET users.most_common_bird = ( SELECT TOP(1) bird_id FROM bird_sighting JOIN users ON users.user_id = bird_sighting.user_id WHERE users.username = @username GROUP BY bird_id ORDER BY count(bird_id) DESC ) ";
+            string sqlSet =     " SET";
             string sqlOutput =  " OUTPUT INSERTED.location, INSERTED.skill_level, INSERTED.favorite_bird, INSERTED.most_common_bird, INSERTED.profile_active";
             string sqlWhere =   " WHERE users.username = @username";
 
             if (!string.IsNullOrEmpty(profile.ZipCode))
             {
-                sqlSet += ", users.location = @location";
+                sqlSet += " users.location = @location";
             }
             if (!string.IsNullOrEmpty(profile.SkillLevel))
             {
-                sqlSet += ", users.skill_level = @skill_level";
+                if (!sqlSet.EndsWith("SET")) { sqlSet += ","; }
+                sqlSet += " users.skill_level = @skill_level";
             }
-            if (profile.FavoriteBird.id > 0)
+            if (!string.IsNullOrEmpty(profile.FavoriteBird))
             {
-                sqlSet += ", users.favorite_bird = @favorite_bird"; 
+                if (!sqlSet.EndsWith("SET")) { sqlSet += ","; }
+                sqlSet += " users.favorite_bird = @favorite_bird"; 
+            }
+            if (!string.IsNullOrEmpty(profile.MostCommonBird))
+            {
+                if (!sqlSet.EndsWith("SET")) { sqlSet += ","; }
+                sqlSet += " users.most_common_bird = @most_common_bird";
             }
 
             sql = sql + sqlSet + sqlOutput + sqlWhere;
@@ -121,8 +128,11 @@ namespace Capstone.DAO
                     }
                     if (sql.Contains("@favorite_bird"))
                     {
-                        command.Parameters.AddWithValue("@favorite_bird", profile.FavoriteBird.id);
-
+                        command.Parameters.AddWithValue("@favorite_bird", profile.FavoriteBird);
+                    }
+                    if (sql.Contains("@most_common_bird"))
+                    {
+                        command.Parameters.AddWithValue("@most_common_bird", profile.MostCommonBird);
                     }
 
                     SqlDataReader reader = command.ExecuteReader();
@@ -206,34 +216,13 @@ namespace Capstone.DAO
 
             profile.ZipCode = GetSafeString(reader, "location");
             profile.SkillLevel = GetSafeString(reader, "skill_level");
-            profile.FavoriteBird = GetSafeBird(reader, "favorite_bird");
-            profile.MostCommonBird = GetSafeBird(reader, "most_common_bird");
+            profile.FavoriteBird = GetSafeString(reader, "favorite_bird");
+            profile.MostCommonBird = GetSafeString(reader, "most_common_bird");
             profile.ProfileActive = Convert.ToBoolean(reader["profile_active"]);
 
             return profile;
         }
 
-        private Bird GetSafeBird(SqlDataReader reader, string columnName)
-        {
-            Bird bird = null;
-            int birdId = GetSafeInt(reader, columnName);
-            if (birdId <= 0)
-            {
-                bird = new Bird();
-                return bird;
-            }
-
-            try
-            {
-                bird = birdDao.getBird(birdId);
-            }
-            catch
-            {
-                bird = new Bird();
-            }
-
-            return bird;
-        }
 
         private string GetSafeString(SqlDataReader reader, string columnName)
         {
