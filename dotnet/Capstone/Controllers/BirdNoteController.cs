@@ -48,15 +48,24 @@ namespace Capstone.Controllers
 
         }
 
-        [HttpPost("/newNote")]
+        [HttpPost("/newNote/{birdId}")]
         public IActionResult addNote([FromBody] BirdNote newBirdSighting)
         {
             const string errorMessage = "An error occurred and a bird was not created.";
 
             IActionResult result;
+
+            DateTime today = DateTime.Now;
+            
             try
             {
                 BirdNote birdSighting = birdSightingDao.addSighting(newBirdSighting, newBirdSighting.BirdId);
+                /*
+                if(birdSighting.DateSpotted > today) 
+                {
+                    Console.WriteLine("Cannot select future date");
+                }
+                */
 
                 result = Created("", "");
             }
@@ -78,14 +87,21 @@ namespace Capstone.Controllers
 
         }
         [HttpPut("/editNote")]
-        public IActionResult editNote(BirdNote sighting, int id)
+        public IActionResult editNote(BirdNote sighting)
         {
             
             const string errorMessage = "An error occurred and bird could not be modified.";
             IActionResult result;
+
+            int currentDate = sighting.DateSpotted.CompareTo(DateTime.Now);
+
+            if (currentDate >= 0)
+            {
+                return BadRequest(new { message = "Cannot enter future date" });
+            }
             try
             {
-                birdSightingDao.editSighting(sighting, id);
+                birdSightingDao.editSighting(sighting, sighting.NoteId);
                 result = Ok();
             }
             catch (DaoException e)
