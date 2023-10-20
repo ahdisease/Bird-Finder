@@ -67,15 +67,13 @@ After logging in, the user can navigate to their profile using the new button in
     width=700
 />
 
-When profiles are created, a skill level of 'beginner' is automatically assigned. A user can update their favorite bird, their zip code, and their skill level at any time[^3].
+When profiles are created, a skill level of 'beginner' is automatically assigned. A user can update their favorite bird, their most commonly spotted bird, their zip code, and their skill level at any time.
 
 <img
     alt="Screenshot of profile update form. Four questions: 1) What is your favorite bird? 2) Tell us what you most commonly spot. 3) Please enter your zip code: 4) What is your skill level? (Beginner, Intermediate, Advanced)"
     src="./screenshots/update_profile_form.png"
     width=400
 />
-
-[^3]:WIP note: The back end API calculates the most common bird at the user's feeder on profile update. The front end currently includes a selection box, but it has no effect on the user's profile.
 
 ## Building a List and Reporting a Bird
 WIP - this section is currently being constructed.
