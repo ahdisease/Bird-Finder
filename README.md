@@ -26,7 +26,7 @@ The following actions are available using the API:
 |**GET**|'/profile'| Request the current user's profile information. | 200 | ``` { "zipcode", "skillLevel", "favoriteBird", "mostCommonBird", "profileActive" } ``` |
 |||| 404 | ``` { "message" } ``` |
 |**POST**|'/updateProfile'| Create a profile for the current user based on a JSON object in the body. Also reactivates a deleted profile. | 201 | ``` { "zipcode", "skillLevel", "favoriteBird", "mostCommonBird", "profileActive" } ``` |
-|**PUT**|'/editProfile'| Updates a profile for the current user based on a JSON object in the body. Also recalculates the most_common_bird value. | 200 |  |
+|**PUT**|'/editProfile'| Updates a profile for the current user based on a JSON object in the body.| 200 |  |
 |**DELETE**|'/deleteProfile'| Deactivates a profile for the current user. | 204 |  |
 |||| 404 | ``` { "message" } ``` |
 |**GET**|'/birds'| Get an array of all birds available in the database as JSON objects. | N/A[^2] | ```[ { "id", "name", "description", "imgUrl" }, ... ]``` |
