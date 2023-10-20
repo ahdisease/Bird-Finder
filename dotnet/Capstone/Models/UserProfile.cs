@@ -5,13 +5,18 @@ namespace Capstone.Models
     public class UserProfile
     {
         [Required]
+        [MaxLength(9)]
+        [MinLength(5)]
         public string ZipCode { get; set; }
         [Required]
+        [RegularExpression("(beginner|intermediate|advanced)")]
         public string SkillLevel { get; set; }
         [Required]
-        public Bird FavoriteBird { get; set; }
+        [MaxLength(20)]
+        public string FavoriteBird { get; set; }
         [Required]
-        public Bird MostCommonBird { get; set; }
+        [MaxLength(20)]
+        public string MostCommonBird { get; set; }
         public bool ProfileActive { get; set; }
 
     }
