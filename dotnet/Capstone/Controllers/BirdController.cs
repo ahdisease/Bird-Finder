@@ -48,7 +48,8 @@ namespace Capstone.Controllers
                 }
                 else
                 {
-                    result = NotFound(new { message = errorMessage });
+                    result = result = NotFound(new { message = errorMessage });
+
                 }
             }
             catch (DaoException e)
