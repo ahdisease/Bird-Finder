@@ -91,11 +91,7 @@ namespace Capstone.DAO
                 if (!sqlSet.EndsWith("SET")) { sqlSet += ","; }
                 sqlSet += " users.skill_level = @skill_level";
             }
-<<<<<<< HEAD
-            if (profile.FavoriteBird.BirdId > 0)
-=======
             if (!string.IsNullOrEmpty(profile.FavoriteBird))
->>>>>>> database-rework
             {
                 if (!sqlSet.EndsWith("SET")) { sqlSet += ","; }
                 sqlSet += " users.favorite_bird = @favorite_bird"; 
@@ -132,16 +128,11 @@ namespace Capstone.DAO
                     }
                     if (sql.Contains("@favorite_bird"))
                     {
-<<<<<<< HEAD
-                        command.Parameters.AddWithValue("@favorite_bird", profile.FavoriteBird.BirdId);
-
-=======
                         command.Parameters.AddWithValue("@favorite_bird", profile.FavoriteBird);
                     }
                     if (sql.Contains("@most_common_bird"))
                     {
                         command.Parameters.AddWithValue("@most_common_bird", profile.MostCommonBird);
->>>>>>> database-rework
                     }
 
                     SqlDataReader reader = command.ExecuteReader();
