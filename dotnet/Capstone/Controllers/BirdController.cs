@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Net.Mail;
+
 
 namespace Capstone.Controllers
 {
@@ -13,9 +13,9 @@ namespace Capstone.Controllers
     [ApiController]
     public class BirdController : ControllerBase
     {
-        private readonly BirdDao birdDao;
+        private readonly IBirdDao birdDao;
         
-        public BirdController(BirdDao birdDao)
+        public BirdController(IBirdDao birdDao)
         {
             this.birdDao = birdDao;
             
@@ -31,16 +31,41 @@ namespace Capstone.Controllers
 
 
         [HttpGet("/birds")]
-        public List<Bird> ListAllBirds()
+        public IActionResult ListAllBirds()
         {
-            List<Bird> birdList = birdDao.getBirds();
 
-            if (birdList == null)
+            string errorMessage = "No birds.";
+
+            IActionResult result;
+            
+            try
             {
-                Console.WriteLine("No bird");
+                List<Bird> birdList = birdDao.getBirds();
+
+                if (birdList != null)
+                {
+                    result = Ok(birdList);
+                }
+                else
+                {
+                    result = NotFound(new { message = errorMessage });
+                }
             }
-           
-            return birdList;
+            catch (DaoException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch (ArgumentException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch
+            {
+                result = BadRequest(new { message = errorMessage });
+            }
+
+
+            return result;
             
         }
 
@@ -48,7 +73,7 @@ namespace Capstone.Controllers
         public IActionResult getBird(int id)
         {
             
-            const string errorMessage = "No bird matches this id.";
+            string errorMessage = "No bird matches this id.";
             IActionResult result;
             try
             {
@@ -63,9 +88,17 @@ namespace Capstone.Controllers
                     result = NotFound(new { message = errorMessage });
                 }
             }
-            catch(DaoException e)
+            catch (DaoException e)
             {
-                result = NotFound(new { message = e.Message });
+                result = BadRequest(new { message = e.Message });
+            }
+            catch (ArgumentException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch
+            {
+                result = BadRequest(new { message = errorMessage });
             }
 
 
@@ -74,23 +107,44 @@ namespace Capstone.Controllers
         }
 
         [HttpGet("/randomBird")]
-        public Bird getRandomBird()
+        public IActionResult getRandomBird()
         {
-            Bird randomBird = birdDao.getRandomBird();
+            string errorMessage = "No birds available.";
+            IActionResult result;
 
-            if (randomBird == null)
+            try
             {
-                Console.WriteLine("No bird matches this id");
-                //return StatusCode(404, ErrorMessage);
-            } 
+                Bird randomBird = birdDao.getRandomBird();
 
-            return randomBird;
+                if (randomBird != null)
+                {
+                    result = Ok(randomBird);
+                }
+                else
+                {
+                    result = NotFound(new { message = errorMessage });
+                }
+            }
+            catch (DaoException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch (ArgumentException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch
+            {
+                result = BadRequest(new { message = errorMessage });
+            }
+
+            return result;
         }
 
         [HttpPost("/lists/{listId}/addBird")]
         public IActionResult createBird([FromBody] Bird newBird, int listId)
         {
-            const string errorMessage = "An error occurred and a bird sighting was not created.";
+            string errorMessage = "An error occurred and a bird sighting was not created.";
             
             IActionResult result;
             try
@@ -116,10 +170,10 @@ namespace Capstone.Controllers
 
         }
 
-        [HttpPut("/updateBird/{id}")]
+        [HttpPut("/updateBird")]
         public IActionResult editBird(Bird updatedBird, int id)
         {
-            const string errorMessage = "An error occurred and bird could not be modified.";
+            string errorMessage = "An error occurred and bird could not be modified.";
             IActionResult result;
             try
             {
@@ -148,7 +202,7 @@ namespace Capstone.Controllers
         public IActionResult deleteBird(int id)
         {
             
-            const string errorMessage = "An error occurred and bird could not be deleted.";
+            string errorMessage = "An error occurred and bird could not be deleted.";
             IActionResult result;
             try
             {
@@ -176,28 +230,74 @@ namespace Capstone.Controllers
 
 
         [HttpGet("/lists/{listId}/birds")]
-        public List<Bird> getBirdsInList(int listId)
+        public IActionResult getBirdsInList(int listId)
         {
-            List<Bird> birdList = birdDao.getBirdsInList(listId);
-            if (birdList == null)
+            string errorMessage = "An error occurred and there are no birds in this list.";
+            IActionResult result;
+            try
             {
-                Console.WriteLine("No bird in this list");
+                List<Bird> birdList = birdDao.getBirdsInList(listId);
+                if (birdList != null)
+                {
+                    result = Ok(birdList);
+                }
+                else
+                {
+                    result = NotFound(new { message = errorMessage });
+                }
+            }
+            catch (DaoException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch (ArgumentException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch
+            {
+                result = BadRequest(new { message = errorMessage });
             }
 
-            return birdList;
+
+
+            return result;
         }
 
 
         [HttpGet("/birds/{zipCode}")]
-        public List<Bird> getBirdByZip(string zipCode)
+        public IActionResult getBirdByZip(string zipCode)
         {
-            List<Bird> birdList = birdDao.getBirdByZip(zipCode);
-            if (birdList == null)
+            string errorMessage = "An error occurred and there are no birds in this zipcode.";
+            IActionResult result;
+            try
             {
-                Console.WriteLine("No bird in this zip code");
+                List<Bird> birdList = birdDao.getBirdByZip(zipCode);
+                if (birdList != null)
+                {
+                    result = Ok(birdList);
+                }
+                else
+                {
+                    result = NotFound(new { message = errorMessage });
+                }
+            }
+            catch (DaoException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch (ArgumentException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch
+            {
+                result = BadRequest(new { message = errorMessage });
             }
 
-            return birdList;
+
+
+            return result;
         }
 
     }

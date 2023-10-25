@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Capstone.DAO
 {
-    public interface BirdDao
+    public interface IBirdDao
     {
         List<Bird> getBirdsInList(int listId);
         Bird getBird(int id);

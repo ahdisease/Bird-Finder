@@ -21,51 +21,95 @@ namespace Capstone.Controllers
         }
 
         [HttpGet("/bird/{birdId}/notes")]
-        public List<BirdNote> getNotes(int birdId)
+        public IActionResult getNotes(int birdId)
         {
-            List<BirdNote> sightingList = birdSightingDao.getSightings(birdId);
+            const string errorMessage = "No sightings.";
 
-            if (sightingList == null)
+            IActionResult result;
+            try
             {
-                Console.WriteLine("No bird");
+                List<BirdNote> sightingList = birdSightingDao.getSightings(birdId);
+
+                if (sightingList != null)
+                {
+                    result = Ok(sightingList);
+                }
+                else
+                {
+                    result = NotFound(new { message = errorMessage });
+                }
+            }
+            catch (DaoException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch (ArgumentException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch
+            {
+                result = BadRequest(new { message = errorMessage });
             }
 
-            return sightingList;
+
+            return result;
 
         }
 
         [HttpGet("/note")]
-        public BirdNote getNote(int id)
+        public IActionResult getNote(int id)
         {
-            BirdNote sighting = birdSightingDao.getBirdSighting(id);
+            const string errorMessage = "No sightings.";
 
-            if (sighting == null)
+            IActionResult result;
+            try
             {
-                Console.WriteLine("No bird");
+                BirdNote sighting = birdSightingDao.getBirdSighting(id);
+
+                if (sighting != null)
+                {
+                    result = Ok(sighting);
+                }
+                else
+                {
+                    result= NotFound(new { message = errorMessage });
+                }
+            }
+            catch (DaoException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch (ArgumentException e)
+            {
+                result = BadRequest(new { message = e.Message });
+            }
+            catch
+            {
+                result = BadRequest(new { message = errorMessage });
             }
 
-            return sighting;
+            return result;
 
         }
 
-        [HttpPost("/newNote/{birdId}")]
+        [HttpPost("/newNote")]
         public IActionResult addNote([FromBody] BirdNote newBirdSighting)
         {
             const string errorMessage = "An error occurred and a bird was not created.";
 
             IActionResult result;
 
-            DateTime today = DateTime.Now;
-            
+            int currentDate = newBirdSighting.DateSpotted.CompareTo(DateTime.Now);
+
+            if (currentDate >= 0)
+            {
+                return BadRequest(new { message = "Cannot enter future date" });
+            }
+
             try
             {
                 BirdNote birdSighting = birdSightingDao.addSighting(newBirdSighting, newBirdSighting.BirdId);
-                /*
-                if(birdSighting.DateSpotted > today) 
-                {
-                    Console.WriteLine("Cannot select future date");
-                }
-                */
 
                 result = Created("", "");
             }

@@ -67,7 +67,7 @@ namespace Capstone.Controllers
         }
 
 
-        [HttpPut("/editList/{listId}")]
+        [HttpPut("/editList")]
         public IActionResult editList(BirdList list, int listId)
         {
             const string errorMessage = "An error occurred and list could not be modified.";

@@ -4,13 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Reflection.Emit;
 using System.Security.Policy;
 using System.Xml.Linq;
 
 namespace Capstone.DAO
 {
-    public class BirdSqlDao : BirdDao
+    public class BirdSqlDao : IBirdDao
     {
         private readonly string connectionString;
         private readonly IBirdListDao birdListDao;
