@@ -1,6 +1,7 @@
 ﻿using Capstone.DAO;
 using Capstone.Exceptions;
 using Capstone.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Security.Principal;
 namespace Capstone.Controllers
 {
     [Route("[controller]")]
+    [Authorize]
     [ApiController]
     public class BirdListController: ControllerBase
     {

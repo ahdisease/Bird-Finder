@@ -6,10 +6,12 @@ using System;
 using Capstone.Models;
 using Capstone.Exceptions;
 using System.Security.Principal;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Capstone.Controllers
 {
     [Route("[controller]")]
+    [Authorize]
     [ApiController]
     public class BirdNoteController : ControllerBase
     {

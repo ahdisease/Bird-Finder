@@ -10,6 +10,7 @@ using System.Collections.Generic;
 namespace Capstone.Controllers
 {
     [Route("[controller]")]
+    [Authorize]
     [ApiController]
     public class BirdController : ControllerBase
     {
@@ -22,7 +23,7 @@ namespace Capstone.Controllers
             
         }
 
-
+        [AllowAnonymous]
         [HttpGet("/")]
         public ActionResult<object> OpenEndpoint()
         {
@@ -48,7 +49,7 @@ namespace Capstone.Controllers
                 }
                 else
                 {
-                    result = result = NotFound(new { message = errorMessage });
+                    result = NotFound(new { message = errorMessage });
 
                 }
             }
@@ -107,6 +108,7 @@ namespace Capstone.Controllers
             
         }
 
+        [AllowAnonymous]
         [HttpGet("/randomBird")]
         public IActionResult getRandomBird()
         {
@@ -265,7 +267,7 @@ namespace Capstone.Controllers
             return result;
         }
 
-
+        [AllowAnonymous]
         [HttpGet("/birds/{zipCode}")]
         public IActionResult getBirdByZip(string zipCode)
         {
