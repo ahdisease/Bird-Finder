@@ -3,15 +3,16 @@ using System.Collections.Generic;
 
 namespace Capstone.DAO
 {
-    public interface BirdDao
+    public interface IBirdDao
     {
-        List<Bird> listAllBirds();
+        List<Bird> getBirdsInList(int listId);
         Bird getBird(int id);
         void deleteBird(int id);
         void editBird(Bird bird, int id);
-        Bird createBird(Bird bird, string name, string description, string picture);
-        Bird getBirdByZip(string zipcode);
+        Bird createBird(Bird bird, int listId);
+        List<Bird> getBirdByZip(string zipCode);
         Bird getRandomBird();
-        
+        List<Bird> getBirds();
+
     }
 }

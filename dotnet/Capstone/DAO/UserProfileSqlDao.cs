@@ -9,7 +9,7 @@ namespace Capstone.DAO
     public class UserProfileSqlDao : IUserProfileDao
     {
         private readonly string connectionString;
-        private readonly BirdDao birdDao;
+        private readonly IBirdDao birdDao;
 
         public UserProfileSqlDao(string dbConnectionString)
         {

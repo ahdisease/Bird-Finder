@@ -63,8 +63,14 @@ namespace Capstone
             services.AddSingleton<ITokenGenerator>(tk => new JwtGenerator(Configuration["JwtSecret"]));
             services.AddSingleton<IPasswordHasher>(ph => new PasswordHasher());
             services.AddTransient<IUserDao>(m => new UserSqlDao(connectionString));
-            services.AddTransient<BirdDao>(m => new BirdSqlDao(connectionString));
+            services.AddTransient<IBirdNoteDao>(n => new BirdNoteSqlDao(connectionString));
+            services.AddTransient<IBirdDao>(m => new BirdSqlDao(connectionString));
             services.AddTransient<IUserProfileDao>(m => new UserProfileSqlDao(connectionString));
+
+
+
+            services.AddTransient<IBirdListDao>(m => new BirdListSqlDao(connectionString));
+
 
         }
 

@@ -2,10 +2,11 @@
 {
     public class Bird
     {
-        public int id { get; set; }
-        public string name { get; set; }
-        public string description { get; set; }
-        public string imgUrl { get; set; }
+        public int BirdId { get; set; }
+        public int ListId { get; set; }
+        public string BirdName { get; set; }
+        public string ImgUrl { get; set; }
+        public string ZipCode { get; set; }
     }
 
 

@@ -99,17 +99,17 @@ UPDATE users
 		--id 1
 INSERT INTO bird (list_id, name, picture, zip_code) VALUES ( 1, 'Blue Jay', 'https://macaulaylibrary.org/asset/609892314', '11111'); 
 		--id 2
-INSERT INTO bird (list_id, name, picture, zip_code) VALUES ( 1, 'Canary', 'https://images.unsplash.com/photo-1586788454110-2d7a4382bd01?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80', '11111');
+INSERT INTO bird (list_id, name, picture, zip_code) VALUES ( 1, 'Canary', 'https://macaulaylibrary.org/asset/609854044', '11111');
 		--id 3
-INSERT INTO bird (list_id, name, picture, zip_code) VALUES ( 2, 'Crow', 'http://pixnio.com/free-images/fauna-animals/birds/ravens-and-crows-pictures/hawaiian-crow-black-bird.jpg', '22222');
+INSERT INTO bird (list_id, name, picture, zip_code) VALUES ( 2, 'Crow', 'https://macaulaylibrary.org/asset/609258235', '22222');
 		--id 4
-INSERT INTO bird (list_id, name, picture, zip_code) VALUES ( 2, 'Goose', 'https://images.unsplash.com/photo-1608453508076-f127b370d51b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1932&q=80', '22222');
+INSERT INTO bird (list_id, name, picture, zip_code) VALUES ( 2, 'Goose', 'https://macaulaylibrary.org/asset/609836519', '22222');
 		--id 5
-INSERT INTO bird (list_id, name, picture, zip_code) VALUES ( 3, 'Hummingbird', 'https://images.unsplash.com/photo-1662477551619-ed427ed3d021?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80', '33333');
+INSERT INTO bird (list_id, name, picture, zip_code) VALUES ( 3, 'Hummingbird', 'https://macaulaylibrary.org/asset/609681565', '33333');
 		--id 6
-INSERT INTO bird (list_id, name, picture, zip_code) VALUES ( 3, 'Crow', 'http://pixnio.com/free-images/fauna-animals/birds/ravens-and-crows-pictures/hawaiian-crow-black-bird.jpg', '33333');
+INSERT INTO bird (list_id, name, picture, zip_code) VALUES ( 3, 'Crow', 'https://macaulaylibrary.org/asset/609258235', '33333');
 		--id 7
-INSERT INTO bird (list_id, name, picture, zip_code) VALUES ( 4, 'Crow', 'http://pixnio.com/free-images/fauna-animals/birds/ravens-and-crows-pictures/hawaiian-crow-black-bird.jpg', '44444');
+INSERT INTO bird (list_id, name, picture, zip_code) VALUES ( 4, 'Crow', 'https://macaulaylibrary.org/asset/609258235', '44444');
 		--id 8
 INSERT INTO bird (list_id, name, picture, zip_code) VALUES ( 5, 'Blue Jay', 'https://macaulaylibrary.org/asset/609892314', '55555'); 
 
