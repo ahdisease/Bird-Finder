@@ -77,7 +77,7 @@ namespace Capstone.DAO
 
         public void editList(BirdList list, int listId, string username)
         {
-            string sql = "UPDATE list SET name = @name WHERE id = @id";
+            string sql = "UPDATE list SET name = @name WHERE id = @id AND user_id = ( SELECT user_id FROM users WHERE username = @username );";
 
             try
             {
@@ -86,8 +86,10 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
+
                     cmd.Parameters.AddWithValue("@id", listId);
-                    cmd.Parameters.AddWithValue("name", list.ListName);
+                    cmd.Parameters.AddWithValue("@name", list.ListName);
+                    cmd.Parameters.AddWithValue("@username", username);
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
