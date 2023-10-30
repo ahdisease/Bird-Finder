@@ -135,7 +135,8 @@ namespace Capstone.Controllers
         [HttpPut("/editNote")]
         public IActionResult editNote(BirdNote sighting)
         {
-            
+            IIdentity user = User.Identity;
+
             const string errorMessage = "An error occurred and bird could not be modified.";
             IActionResult result;
 
@@ -147,7 +148,7 @@ namespace Capstone.Controllers
             }
             try
             {
-                birdSightingDao.editSighting(sighting, sighting.NoteId);
+                birdSightingDao.editSighting(sighting, sighting.NoteId, user.Name);
                 result = Ok();
             }
             catch (DaoException e)
@@ -170,12 +171,12 @@ namespace Capstone.Controllers
         [HttpDelete("/deleteNote/{id}")]
         public IActionResult deleteNote(int id)
         {
-            
+            IIdentity user = User.Identity;
             const string errorMessage = "An error occurred and bird could not be deleted.";
             IActionResult result;
             try
             {
-                birdSightingDao.deleteSighting(id);
+                birdSightingDao.deleteSighting(id, user.Name);
                 result = NoContent();
             }
             catch (DaoException e)

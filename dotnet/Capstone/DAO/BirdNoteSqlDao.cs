@@ -83,7 +83,11 @@ namespace Capstone.DAO
 
         public void editSighting(BirdNote birdSighting, int id, string username)
         {
-            string sql = "UPDATE bird_sighting SET date_sighted = @date_sighted, males_spotted = @males_spotted, females_spotted = @females_spotted, feeder_type = @feeder_type, food_blend = @food_blend, notes = @notes WHERE id = @id";
+            string sqlUpdate =  "UPDATE bird_sighting";
+            string sqlSet =     " SET date_sighted = @date_sighted, males_spotted = @males_spotted, females_spotted = @females_spotted, feeder_type = @feeder_type, food_blend = @food_blend, notes = @notes";
+            string sqlFrom =    " FROM bird_sighting JOIN bird ON bird.id = bird_id JOIN list ON list.id = list_id";
+            string sqlWhere =   " WHERE bird_sighting.id = @id AND user_id = (SELECT user_id FROM users WHERE username = @username);";
+            string sql = sqlUpdate + sqlSet + sqlFrom + sqlWhere;
 
             try
             {
@@ -93,7 +97,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@id", id);
-                    //cmd.Parameters.AddWithValue("@bird_id", birdSighting.BirdId);
+                    cmd.Parameters.AddWithValue("@username", username);
                     cmd.Parameters.AddWithValue("@date_sighted", birdSighting.DateSpotted);
                     cmd.Parameters.AddWithValue("@males_spotted", birdSighting.NumMales);
                     cmd.Parameters.AddWithValue("@females_spotted", birdSighting.NumFemales);
