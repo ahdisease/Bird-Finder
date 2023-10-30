@@ -85,9 +85,10 @@ namespace Capstone.DAO
         {
             string sqlUpdate =  "UPDATE bird_sighting";
             string sqlSet =     " SET date_sighted = @date_sighted, males_spotted = @males_spotted, females_spotted = @females_spotted, feeder_type = @feeder_type, food_blend = @food_blend, notes = @notes";
+            string sqlOutput =  " OUTPUT INSERTED.id";
             string sqlFrom =    " FROM bird_sighting JOIN bird ON bird.id = bird_id JOIN list ON list.id = list_id";
             string sqlWhere =   " WHERE bird_sighting.id = @id AND user_id = (SELECT user_id FROM users WHERE username = @username);";
-            string sql = sqlUpdate + sqlSet + sqlFrom + sqlWhere;
+            string sql = sqlUpdate + sqlSet + sqlOutput + sqlFrom + sqlWhere;
 
             try
             {
@@ -106,6 +107,11 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@notes", birdSighting.Notes);
 
                     SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (!reader.HasRows)
+                    {
+                        throw new DaoException("Unable to update note.");
+                    }
                 }
             }
             catch (SqlException ex)
