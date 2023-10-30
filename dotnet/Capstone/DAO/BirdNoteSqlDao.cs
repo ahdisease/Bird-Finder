@@ -3,7 +3,8 @@ using Capstone.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Xml.Linq;
+using System.Data;
+
 
 namespace Capstone.DAO
 {
@@ -57,18 +58,19 @@ namespace Capstone.DAO
             return newSighting;
         }
 
-        public void deleteSighting(int id)
+        public void deleteSighting(int id, string username)
         {
-            string sql = "DELETE FROM bird_sighting WHERE id = @id";
-
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@id", id);
+                    SqlCommand cmd = new SqlCommand("Delete_Bird_Sighting", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    cmd.Parameters.AddWithValue("@Username", username);
 
                     SqlDataReader reader = cmd.ExecuteReader();
                 }
@@ -79,7 +81,7 @@ namespace Capstone.DAO
             }
         }
 
-        public void editSighting(BirdNote birdSighting, int id)
+        public void editSighting(BirdNote birdSighting, int id, string username)
         {
             string sql = "UPDATE bird_sighting SET date_sighted = @date_sighted, males_spotted = @males_spotted, females_spotted = @females_spotted, feeder_type = @feeder_type, food_blend = @food_blend, notes = @notes WHERE id = @id";
 
