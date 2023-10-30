@@ -78,7 +78,8 @@ namespace Capstone.Controllers
 
             try
             {
-                birdListDao.editList(list, listId);
+                IIdentity user = User.Identity;
+                birdListDao.editList(list, listId, user.Name);
                 result = Ok();
             }
             catch(ArgumentException e)
@@ -103,7 +104,8 @@ namespace Capstone.Controllers
 
             try
             {
-                birdListDao.deleteList(listId); 
+                IIdentity user = User.Identity;
+                birdListDao.deleteList(listId, user.Name); 
 
                 result = NoContent();
             }
