@@ -89,9 +89,8 @@ namespace Capstone.DAO
             return newBird;
         }
 
-        public void deleteBird(int id)
+        public void deleteBird(int id, string username)
         {
-            string sql = "DELETE FROM bird WHERE id = @id";
 
             try
             {
@@ -99,9 +98,13 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@id", id);
- 
+                    SqlCommand cmd = new SqlCommand("Delete_Bird", conn);
+
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    cmd.Parameters.AddWithValue("@Username", username);
+
                     SqlDataReader reader = cmd.ExecuteReader();
                 }
             } 
