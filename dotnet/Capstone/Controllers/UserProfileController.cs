@@ -75,7 +75,7 @@ namespace Capstone.Controllers
             {
                 _profileDao.ActivateUserProfile(profile, user.Name);
                 profile = _profileDao.UpdateUserProfile(profile, user.Name);
-                result = Created("",profile);
+                result = Created($"{Request.Host}/profile", profile);
             } 
             catch (DaoException e)
             {

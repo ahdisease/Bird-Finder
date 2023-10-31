@@ -6,7 +6,7 @@ This project is built using C#/.NET and SQL Server for the back end API, and the
 - [kimbambala](https://github.com/kimbambala)
 
 ## Schema - WIP
-The diagram below describes the database schema. Currently there is no List item.
+The diagram below describes the database schema.
 
 <img
     alt="Entity relationship diagram."
@@ -26,7 +26,7 @@ The following actions are available using the API:
 |**GET**|'/profile'| Request the current user's profile information. | 200 | ``` { "zipcode", "skillLevel", "favoriteBird", "mostCommonBird", "profileActive" } ``` |
 |||| 404 | ``` { "message" } ``` |
 |**POST**|'/createProfile'| Create a profile for the current user based on a JSON object in the body. Also reactivates a deleted profile. | 201 | ``` { "zipcode", "skillLevel", "favoriteBird", "mostCommonBird", "profileActive" } ``` |
-|**PUT**|'/updateProfile'| Updates a profile for the current user based on a JSON object in the body. Also recalculates the most_common_bird value. | 200 |  |
+|**PUT**|'/editProfile'| Updates a profile for the current user based on a JSON object in the body.| 200 |  |
 |**DELETE**|'/deleteProfile'| Deactivates a profile for the current user. | 204 |  |
 |||| 404 | ``` { "message" } ``` |
 |**GET**|'/birds'| Get an array of all birds available in the database as JSON objects. | N/A[^2] | ```[ { "id", "name", "description", "imgUrl" }, ... ]``` |
@@ -67,15 +67,13 @@ After logging in, the user can navigate to their profile using the new button in
     width=700
 />
 
-When profiles are created, a skill level of 'beginner' is automatically assigned. A user can update their favorite bird, their zip code, and their skill level at any time[^3].
+When profiles are created, a skill level of 'beginner' is automatically assigned. A user can update their favorite bird, their most commonly spotted bird, their zip code, and their skill level at any time.
 
 <img
     alt="Screenshot of profile update form. Four questions: 1) What is your favorite bird? 2) Tell us what you most commonly spot. 3) Please enter your zip code: 4) What is your skill level? (Beginner, Intermediate, Advanced)"
     src="./screenshots/update_profile_form.png"
     width=400
 />
-
-[^3]:WIP note: The back end API calculates the most common bird at the user's feeder on profile update. The front end currently includes a selection box, but it has no effect on the user's profile.
 
 ## Building a List and Reporting a Bird
 WIP - this section is currently being constructed.
