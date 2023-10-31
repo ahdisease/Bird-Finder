@@ -57,7 +57,7 @@ namespace Capstone.Controllers
         }
 
         [HttpPost]
-        [Route("/updateProfile")]
+        [Route("/createProfile")]
         public IActionResult CreateUserProfile([FromBody] UserProfile profile)
         {
             IIdentity user = this.User.Identity;
