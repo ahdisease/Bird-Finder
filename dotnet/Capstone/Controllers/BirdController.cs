@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-
+using System.Security.Principal;
 
 namespace Capstone.Controllers
 {
@@ -204,12 +204,13 @@ namespace Capstone.Controllers
         [HttpDelete("/deleteBird/{id}")]
         public IActionResult deleteBird(int id)
         {
-            
+            IIdentity user = User.Identity;
+
             string errorMessage = "An error occurred and bird could not be deleted.";
             IActionResult result;
             try
             {
-                birdDao.deleteBird(id);
+                birdDao.deleteBird(id,user.Name);
                 result = NoContent();
             }
             catch (DaoException e)

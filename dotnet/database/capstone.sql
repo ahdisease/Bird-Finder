@@ -71,6 +71,8 @@ ALTER TABLE bird_sighting
 	ADD CONSTRAINT FK_bird_sighting_bird FOREIGN KEY (bird_id) REFERENCES bird (id);
 
 
+
+
 --populate default data
 	--users
 INSERT INTO users (username, password_hash, salt, user_role) VALUES ('user','Jg45HuwT7PZkfuKTz6IB90CtWY4=','LHxP4Xh7bN0=','user');		--id 1
@@ -130,4 +132,65 @@ INSERT INTO bird_sighting (bird_id, males_spotted, females_spotted, feeder_type,
 --		)
 --	WHERE users.user_id = 1	
 
+
+
+--create stored proceedures
+GO
+CREATE PROCEDURE Delete_List
+	-- Add the parameters for the stored procedure here
+	@Id int,
+	@Username varchar(50)
+AS
+BEGIN TRANSACTION
+
+DELETE bird_sighting
+	FROM bird_sighting
+	JOIN bird on bird_sighting.bird_id = bird.id
+	JOIN list on bird.list_id = list.id
+WHERE list_id = @Id AND user_id = (SELECT user_id FROM users WHERE username = @Username);
+
+DELETE bird
+	FROM bird
+	JOIN list on bird.list_id = list.id
+WHERE list_id = @Id AND user_id = (SELECT user_id FROM users WHERE username = @Username);
+
+DELETE list
+WHERE id = @Id AND user_id = (SELECT user_id FROM users WHERE username = @Username);
+
+COMMIT
+GO
+CREATE PROCEDURE Delete_Bird
+	-- Add the parameters for the stored procedure here
+	@Id int,
+	@Username varchar(50)
+AS
+BEGIN TRANSACTION
+
+DELETE bird_sighting
+	FROM bird_sighting
+	JOIN bird on bird_sighting.bird_id = bird.id
+	JOIN list on bird.list_id = list.id
+WHERE bird.id = @Id AND user_id = (SELECT user_id FROM users WHERE username = @Username);
+
+DELETE bird
+	FROM bird
+	JOIN list on bird.list_id = list.id
+WHERE bird.id = @Id AND user_id = (SELECT user_id FROM users WHERE username = @Username);
+
+COMMIT
+GO
+CREATE PROCEDURE Delete_Bird_Sighting
+	-- Add the parameters for the stored procedure here
+	@Id int,
+	@Username varchar(50)
+AS
+BEGIN TRANSACTION
+
+DELETE bird_sighting
+	FROM bird_sighting
+	JOIN bird on bird_sighting.bird_id = bird.id
+	JOIN list on bird.list_id = list.id
+WHERE bird_sighting.id = @Id AND user_id = (SELECT user_id FROM users WHERE username = @Username);
+
+COMMIT
 GO

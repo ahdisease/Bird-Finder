@@ -49,11 +49,8 @@ namespace Capstone.DAO
             return newBirdList;
         }
 
-        public void deleteList(int listId)
+        public void deleteList(int listId, string username)
         {
-            
-
-            string sql = "DELETE FROM bird WHERE list_id  =  @list_id; DELETE FROM list WHERE id = @id";
 
             try
             {
@@ -61,10 +58,12 @@ namespace Capstone.DAO
                 {
                     conn.Open();
 
+                    
+                    SqlCommand cmd = new SqlCommand("Delete_List", conn);
 
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@id", listId);
-                    cmd.Parameters.AddWithValue("@list_id", listId);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Id", listId);
+                    cmd.Parameters.AddWithValue("@Username", username);
 
                     SqlDataReader reader = cmd.ExecuteReader();
                     
@@ -76,9 +75,9 @@ namespace Capstone.DAO
             }
         }
 
-        public void editList(BirdList list, int listId)
+        public void editList(BirdList list, int listId, string username)
         {
-            string sql = "UPDATE list SET name = @name WHERE id = @id";
+            string sql = "UPDATE list SET name = @name WHERE id = @id AND user_id = ( SELECT user_id FROM users WHERE username = @username );";
 
             try
             {
@@ -87,8 +86,10 @@ namespace Capstone.DAO
                     conn.Open();
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
+
                     cmd.Parameters.AddWithValue("@id", listId);
-                    cmd.Parameters.AddWithValue("name", list.ListName);
+                    cmd.Parameters.AddWithValue("@name", list.ListName);
+                    cmd.Parameters.AddWithValue("@username", username);
 
                     SqlDataReader reader = cmd.ExecuteReader();
 

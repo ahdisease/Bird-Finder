@@ -70,7 +70,7 @@ namespace Capstone.Controllers
 
 
         [HttpPut("/editList")]
-        public IActionResult editList(BirdList list, int listId)
+        public IActionResult editList(BirdList list)
         {
             const string errorMessage = "An error occurred and list could not be modified.";
             
@@ -78,7 +78,8 @@ namespace Capstone.Controllers
 
             try
             {
-                birdListDao.editList(list, listId);
+                IIdentity user = User.Identity;
+                birdListDao.editList(list, list.ListId, user.Name);
                 result = Ok();
             }
             catch(ArgumentException e)
@@ -103,7 +104,8 @@ namespace Capstone.Controllers
 
             try
             {
-                birdListDao.deleteList(listId); 
+                IIdentity user = User.Identity;
+                birdListDao.deleteList(listId, user.Name); 
 
                 result = NoContent();
             }

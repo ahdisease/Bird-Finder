@@ -3,7 +3,8 @@ using Capstone.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Xml.Linq;
+using System.Data;
+
 
 namespace Capstone.DAO
 {
@@ -57,18 +58,19 @@ namespace Capstone.DAO
             return newSighting;
         }
 
-        public void deleteSighting(int id)
+        public void deleteSighting(int id, string username)
         {
-            string sql = "DELETE FROM bird_sighting WHERE id = @id";
-
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
 
-                    SqlCommand cmd = new SqlCommand(sql, conn);
-                    cmd.Parameters.AddWithValue("@id", id);
+                    SqlCommand cmd = new SqlCommand("Delete_Bird_Sighting", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    cmd.Parameters.AddWithValue("@Username", username);
 
                     SqlDataReader reader = cmd.ExecuteReader();
                 }
@@ -79,9 +81,14 @@ namespace Capstone.DAO
             }
         }
 
-        public void editSighting(BirdNote birdSighting, int id)
+        public void editSighting(BirdNote birdSighting, int id, string username)
         {
-            string sql = "UPDATE bird_sighting SET date_sighted = @date_sighted, males_spotted = @males_spotted, females_spotted = @females_spotted, feeder_type = @feeder_type, food_blend = @food_blend, notes = @notes WHERE id = @id";
+            string sqlUpdate =  "UPDATE bird_sighting";
+            string sqlSet =     " SET date_sighted = @date_sighted, males_spotted = @males_spotted, females_spotted = @females_spotted, feeder_type = @feeder_type, food_blend = @food_blend, notes = @notes";
+            string sqlOutput =  " OUTPUT INSERTED.id";
+            string sqlFrom =    " FROM bird_sighting JOIN bird ON bird.id = bird_id JOIN list ON list.id = list_id";
+            string sqlWhere =   " WHERE bird_sighting.id = @id AND user_id = (SELECT user_id FROM users WHERE username = @username);";
+            string sql = sqlUpdate + sqlSet + sqlOutput + sqlFrom + sqlWhere;
 
             try
             {
@@ -91,7 +98,7 @@ namespace Capstone.DAO
 
                     SqlCommand cmd = new SqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@id", id);
-                    //cmd.Parameters.AddWithValue("@bird_id", birdSighting.BirdId);
+                    cmd.Parameters.AddWithValue("@username", username);
                     cmd.Parameters.AddWithValue("@date_sighted", birdSighting.DateSpotted);
                     cmd.Parameters.AddWithValue("@males_spotted", birdSighting.NumMales);
                     cmd.Parameters.AddWithValue("@females_spotted", birdSighting.NumFemales);
@@ -100,6 +107,11 @@ namespace Capstone.DAO
                     cmd.Parameters.AddWithValue("@notes", birdSighting.Notes);
 
                     SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (!reader.HasRows)
+                    {
+                        throw new DaoException("Unable to update note.");
+                    }
                 }
             }
             catch (SqlException ex)

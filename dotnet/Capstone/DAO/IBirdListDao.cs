@@ -8,8 +8,8 @@ namespace Capstone.DAO
         BirdList getList(int id);
         List<BirdList> getAllLists(string username);
         BirdList createList(BirdList list, string username);
-        void editList(BirdList list, int id);
-        void deleteList(int listId);
+        void editList(BirdList list, int id, string username);
+        void deleteList(int listId, string username);
         int getListIdByListName(string name);
 
 
