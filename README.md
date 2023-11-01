@@ -14,31 +14,54 @@ The diagram below describes the database schema.
     width=700
 />
 
-## API Routes
+## API Routes - Profile
 The following actions are available using the API:
 
 | HTTP Method | Endpoint URL[^1] | Description | Status code | Returned Value |
 | :---: | :---: | :--- | :---: | :--- | 
-|**POST**|'/register'| Register a new user. | 201 | ``` { "userId", "username", "role" } ``` |
-|||| 409, 500 | ``` { "message" } ``` |
-|**POST**|'/login'| Request a JWT for authorization. | 200 | ``` { user: { "userId", "username", "role" }, "token" }``` |
-|||| 409, 500 | ``` { "message" } ``` |
-|**GET**|'/profile'| Request the current user's profile information. | 200 | ``` { "zipcode", "skillLevel", "favoriteBird", "mostCommonBird", "profileActive" } ``` |
-|||| 404 | ``` { "message" } ``` |
-|**POST**|'/createProfile'| Create a profile for the current user based on a JSON object in the body. Also reactivates a deleted profile. | 201 | ``` { "zipcode", "skillLevel", "favoriteBird", "mostCommonBird", "profileActive" } ``` |
+|**POST**|'/register'| Register a new user. | 201 | {<br/>&emsp;"userId",<br/>&emsp;"username",<br/>&emsp;"role"<br />} |
+|||| 409, 500 | { "message" } |
+|**POST**|'/login'| Request a JWT for authorization. | 200 | {<br/>&emsp;user: {<br/>&emsp;&emsp;"userId",<br/>&emsp;&emsp;"username",<br/>&emsp;&emsp;"role"<br/>&emsp;},<br/>&emsp;"token"<br/>} |
+|||| 409, 500 |  { "message" }  |
+|**GET**|'/profile'| Request the current user's profile information. | 200 |  {<br/>&emsp; "zipcode",<br/>&emsp; "skillLevel",<br/>&emsp; "favoriteBird",<br/>&emsp; "mostCommonBird",<br/>&emsp; "profileActive"<br/> }  |
+|||| 404 |  { "message" }  |
+|**POST**|'/createProfile'| Create a profile for the current user based on a JSON object in the body. Also reactivates a deleted profile. | 201 | { <br/>&emsp;"zipcode", <br/>&emsp;"skillLevel", <br/>&emsp;"favoriteBird", <br/>&emsp;"mostCommonBird", <br/>&emsp;"profileActive" <br/>} |
 |**PUT**|'/editProfile'| Updates a profile for the current user based on a JSON object in the body.| 200 |  |
 |**DELETE**|'/deleteProfile'| Deactivates a profile for the current user. | 204 |  |
-|||| 404 | ``` { "message" } ``` |
-|**GET**|'/birds'| Get an array of all birds available in the database as JSON objects. | N/A[^2] | ```[ { "id", "name", "description", "imgUrl" }, ... ]``` |
-|||| | ``` [] ``` |
-|**GET**|'/birds/{id}'| Request a bird JSON object with a specific ID. | N/A[^2] | ``` { "id", "name", "description", "imgUrl" } ``` |
-|**GET**|'/randomBird'| Request a random bird JSON object. | N/A[^2] | ``` { "id", "name", "description", "imgUrl" } ``` |
-|**POST**|'/birds'| Create a bird from a JSON object in the body. | N/A[^2] | |
-|**PUT**|'/birds/{id}'| Update a bird from a JSON object in the body. | N/A[^2] |  |
-|**DELETE**|'/bird/{id}'| Delete a bird from the database with a specific ID. | N/A[^2] |  |
+|||| 404 | { "message" }  |
+---
+---
+<br/>
+
+
+
+## API Routes - Bird 
+| HTTP Method | Endpoint URL[^1] | Description | Status code | Returned Value |
+| :---: | :---: | :--- | :---: | :--- | 
+|**GET**|'/birds'| Request an array of all birds available in the database. | 200 | [<br/>&emsp; {<br/>&emsp;&emsp;"birdId",<br/>&emsp;&emsp;"listId", <br/>&emsp;&emsp;"birdName", <br/>&emsp;&emsp;"imgUrl", <br/>&emsp;&emsp;"zipCode"<br/>&emsp;},<br/>&emsp;  ... <br/>] |
+|||| 400, 404 | { "message" } |
+|**GET**|'/lists/`{listId}`/birds'|Request an array of all birds from a list with a specific list ID.| 200 | [<br/>&emsp; {<br/>&emsp;&emsp;"birdId",<br/>&emsp;&emsp;"listId", <br/>&emsp;&emsp;"birdName", <br/>&emsp;&emsp;"imgUrl", <br/>&emsp;&emsp;"zipCode"<br/>&emsp;},<br/>&emsp;  ... <br/>]|
+|||| 400, 404 | { "message" }|
+|**GET**|'/birds/`{zipCode}`'|Request an array of all birds seen at a given zipcode.| 200 | [<br/>&emsp; {<br/>&emsp;&emsp;"birdId",<br/>&emsp;&emsp;"listId", <br/>&emsp;&emsp;"birdName", <br/>&emsp;&emsp;"imgUrl", <br/>&emsp;&emsp;"zipCode"<br/>&emsp;},<br/>&emsp;  ... <br/>]|
+|||| 400, 404 | { "message" }|
+|**GET**|'/birds/`{id}`'| Request a bird JSON object with a specific ID. | 200 | {<br/>&emsp;"birdId",<br/>&emsp;"listId", <br/>&emsp;"birdName", <br/>&emsp;"imgUrl", <br/>&emsp;"zipCode"<br/>} |
+|||| 400, 404 | { "message" }|
+|**GET**|'/randomBird'| Request a random bird. | 200 | {<br/>&emsp;"birdId",<br/>&emsp;"listId", <br/>&emsp;"birdName", <br/>&emsp;"imgUrl", <br/>&emsp;"zipCode"<br/>} |
+|||| 400, 404 | { "message" }|
+|**POST**|'/birds'| Create a bird from a JSON object. | 201 | |
+|||| 400 | { "message" }|
+|**PUT**|'/birds/{id}'| Update a bird from a JSON object. | 200 |  |
+|||| 400 | { "message" }|
+|**DELETE**|'/bird/{id}'| Delete a bird from the database with a specific ID. | 204 |  |
+|||| 400 | { "message" }|
+
+
+---
+---
+<br/>
 
 [^1]: Endpoint URLs were chosen to match Vue frontend supplied by Tech Elevator.
-[^2]: Bird related actions currently return no status codes
+
 
 ## Profile creation
 An anonymous user arrives at the landing page as shown below:
