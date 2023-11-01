@@ -33,16 +33,30 @@ The following actions are available using the API:
 ---
 <br/>
 
-
+## API Routes - List
+| HTTP Method | Endpoint URL[^1] | Description | Status code | Returned Value |
+| :---: | :---: | :--- | :---: | :--- | 
+|**GET**|'/lists/`{listId}`'| Request a user owned list of birds with given ID. | 200 | {<br/>&emsp;"listId",<br/>&emsp;"userId",<br/>&emsp;"listName"  <br/>} |
+|||| 404 | { "message" } |
+|**GET**|'/lists'| Request all user owned lists of birds. |  | [<br/>&emsp;{<br/>&emsp;&emsp;"listId",<br/>&emsp;&emsp;"userId",<br/>&emsp;&emsp;"listName"  <br/>&emsp;},<br/>&emsp;. . .<br/>] |
+|**POST**|'/createList'| Create a new list from JSON object. | 201 ||
+|||| 400 | { "message" } |
+|**PUT**|'/editList'| Update a list's name with JSON object. | 200 | |
+|||| 400, 404 | { "message" } |
+|**DELETE**|'/deleteList/`{listId}`'| Delete a list with a given ID. | 204 ||
+|||| 400 | { "message" } |
+---
+---
+<br/>
 
 ## API Routes - Bird 
 | HTTP Method | Endpoint URL[^1] | Description | Status code | Returned Value |
 | :---: | :---: | :--- | :---: | :--- | 
-|**GET**|'/birds'| Request an array of all birds available in the database. | 200 | [<br/>&emsp; {<br/>&emsp;&emsp;"birdId",<br/>&emsp;&emsp;"listId", <br/>&emsp;&emsp;"birdName", <br/>&emsp;&emsp;"imgUrl", <br/>&emsp;&emsp;"zipCode"<br/>&emsp;},<br/>&emsp;  ... <br/>] |
+|**GET**|'/birds'| Request an array of all birds available in the database. | 200 | [<br/>&emsp; {<br/>&emsp;&emsp;"birdId",<br/>&emsp;&emsp;"listId", <br/>&emsp;&emsp;"birdName", <br/>&emsp;&emsp;"imgUrl", <br/>&emsp;&emsp;"zipCode"<br/>&emsp;},<br/>&emsp;  . . . <br/>] |
 |||| 400, 404 | { "message" } |
-|**GET**|'/lists/`{listId}`/birds'|Request an array of all birds from a list with a specific list ID.| 200 | [<br/>&emsp; {<br/>&emsp;&emsp;"birdId",<br/>&emsp;&emsp;"listId", <br/>&emsp;&emsp;"birdName", <br/>&emsp;&emsp;"imgUrl", <br/>&emsp;&emsp;"zipCode"<br/>&emsp;},<br/>&emsp;  ... <br/>]|
+|**GET**|'/lists/`{listId}`/birds'|Request an array of all birds from a list with a specific list ID.| 200 | [<br/>&emsp; {<br/>&emsp;&emsp;"birdId",<br/>&emsp;&emsp;"listId", <br/>&emsp;&emsp;"birdName", <br/>&emsp;&emsp;"imgUrl", <br/>&emsp;&emsp;"zipCode"<br/>&emsp;},<br/>&emsp;  . . . <br/>]|
 |||| 400, 404 | { "message" }|
-|**GET**|'/birds/`{zipCode}`'|Request an array of all birds seen at a given zipcode.| 200 | [<br/>&emsp; {<br/>&emsp;&emsp;"birdId",<br/>&emsp;&emsp;"listId", <br/>&emsp;&emsp;"birdName", <br/>&emsp;&emsp;"imgUrl", <br/>&emsp;&emsp;"zipCode"<br/>&emsp;},<br/>&emsp;  ... <br/>]|
+|**GET**|'/birds/`{zipCode}`'|Request an array of all birds seen at a given zipcode.| 200 | [<br/>&emsp; {<br/>&emsp;&emsp;"birdId",<br/>&emsp;&emsp;"listId", <br/>&emsp;&emsp;"birdName", <br/>&emsp;&emsp;"imgUrl", <br/>&emsp;&emsp;"zipCode"<br/>&emsp;},<br/>&emsp;  . . . <br/>]|
 |||| 400, 404 | { "message" }|
 |**GET**|'/birds/`{id}`'| Request a bird JSON object with a specific ID. | 200 | {<br/>&emsp;"birdId",<br/>&emsp;"listId", <br/>&emsp;"birdName", <br/>&emsp;"imgUrl", <br/>&emsp;"zipCode"<br/>} |
 |||| 400, 404 | { "message" }|
@@ -54,8 +68,15 @@ The following actions are available using the API:
 |||| 400 | { "message" }|
 |**DELETE**|'/bird/{id}'| Delete a bird from the database with a specific ID. | 204 |  |
 |||| 400 | { "message" }|
+---
+---
+<br/>
 
-
+## API Routes - Note
+| HTTP Method | Endpoint URL[^1] | Description | Status code | Returned Value |
+| :---: | :---: | :--- | :---: | :--- | 
+|**GET**|'/birds'| Request an array of all birds available in the database. | 200 | [<br/>&emsp; {<br/>&emsp;&emsp;"birdId",<br/>&emsp;&emsp;"listId", <br/>&emsp;&emsp;"birdName", <br/>&emsp;&emsp;"imgUrl", <br/>&emsp;&emsp;"zipCode"<br/>&emsp;},<br/>&emsp;  . . . <br/>] |
+|||| 400, 404 | { "message" } |
 ---
 ---
 <br/>
