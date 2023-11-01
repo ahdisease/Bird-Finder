@@ -1,11 +1,11 @@
-# Bird Nerds - WIP
+# Bird Nerds
 
 Bird Nerds is a hobby web app that allows users to post about birds they have seen at their local bird feeder. Bird sightings that have been posted store the birds so that they may be found in a search by zipcode. Users can look back at their reported sightings by viewing their saved lists.
 
 This project is built using C#/.NET and SQL Server for the back end API, and the Vue.js front end was provided as part of a Tech Elevator alumni project. In general, the front end has been left untouched in style, though minor structural edits may be made to adapt to the format of the back end API. Project partner:
 - [kimbambala](https://github.com/kimbambala)
 
-## Schema - WIP
+## Schema
 The diagram below describes the database schema.
 
 <img
@@ -14,31 +14,85 @@ The diagram below describes the database schema.
     width=700
 />
 
-## API Routes
-The following actions are available using the API:
-
-| HTTP Method | Endpoint URL[^1] | Description | Status code | Returned Value |
+## API Routes 
+The following tables describe all available API endpoints. Endpoint URLs were chosen to match Vue front end supplied by Tech Elevator.
+### User/Profile
+| HTTP Method | Endpoint URL | Description | Status code | Returned Value |
 | :---: | :---: | :--- | :---: | :--- | 
-|**POST**|'/register'| Register a new user. | 201 | ``` { "userId", "username", "role" } ``` |
-|||| 409, 500 | ``` { "message" } ``` |
-|**POST**|'/login'| Request a JWT for authorization. | 200 | ``` { user: { "userId", "username", "role" }, "token" }``` |
-|||| 409, 500 | ``` { "message" } ``` |
-|**GET**|'/profile'| Request the current user's profile information. | 200 | ``` { "zipcode", "skillLevel", "favoriteBird", "mostCommonBird", "profileActive" } ``` |
-|||| 404 | ``` { "message" } ``` |
-|**POST**|'/createProfile'| Create a profile for the current user based on a JSON object in the body. Also reactivates a deleted profile. | 201 | ``` { "zipcode", "skillLevel", "favoriteBird", "mostCommonBird", "profileActive" } ``` |
+|**POST**|'/register'| Register a new user. | 201 | {<br/>&emsp;"userId",<br/>&emsp;"username",<br/>&emsp;"role"<br />} |
+|||| 409, 500 | { "message" } |
+|**POST**|'/login'| Request a JWT for authorization. | 200 | {<br/>&emsp;user: {<br/>&emsp;&emsp;"userId",<br/>&emsp;&emsp;"username",<br/>&emsp;&emsp;"role"<br/>&emsp;},<br/>&emsp;"token"<br/>} |
+|||| 409, 500 |  { "message" }  |
+|**GET**|'/profile'| Request the current user's profile information. | 200 |  {<br/>&emsp; "zipcode",<br/>&emsp; "skillLevel",<br/>&emsp; "favoriteBird",<br/>&emsp; "mostCommonBird",<br/>&emsp; "profileActive"<br/> }  |
+|||| 404 |  { "message" }  |
+|**POST**|'/createProfile'| Create a profile for the current user based on a JSON object in the body. Also reactivates a deleted profile. | 201 | { <br/>&emsp;"zipcode", <br/>&emsp;"skillLevel", <br/>&emsp;"favoriteBird", <br/>&emsp;"mostCommonBird", <br/>&emsp;"profileActive" <br/>} |
+|||| 400 | { "message" }  |
 |**PUT**|'/editProfile'| Updates a profile for the current user based on a JSON object in the body.| 200 |  |
+|||| 400 | { "message" }  |
 |**DELETE**|'/deleteProfile'| Deactivates a profile for the current user. | 204 |  |
-|||| 404 | ``` { "message" } ``` |
-|**GET**|'/birds'| Get an array of all birds available in the database as JSON objects. | N/A[^2] | ```[ { "id", "name", "description", "imgUrl" }, ... ]``` |
-|||| | ``` [] ``` |
-|**GET**|'/birds/{id}'| Request a bird JSON object with a specific ID. | N/A[^2] | ``` { "id", "name", "description", "imgUrl" } ``` |
-|**GET**|'/randomBird'| Request a random bird JSON object. | N/A[^2] | ``` { "id", "name", "description", "imgUrl" } ``` |
-|**POST**|'/birds'| Create a bird from a JSON object in the body. | N/A[^2] | |
-|**PUT**|'/birds/{id}'| Update a bird from a JSON object in the body. | N/A[^2] |  |
-|**DELETE**|'/bird/{id}'| Delete a bird from the database with a specific ID. | N/A[^2] |  |
+|||| 404 | { "message" }  |
+---
+---
+<br/>
 
-[^1]: Endpoint URLs were chosen to match Vue frontend supplied by Tech Elevator.
-[^2]: Bird related actions currently return no status codes
+### List
+| HTTP Method | Endpoint URL | Description | Status code | Returned Value |
+| :---: | :---: | :--- | :---: | :--- | 
+|**GET**|'/lists/`{listId}`'| Request a user owned list of birds with given ID. | 200 | {<br/>&emsp;"listId",<br/>&emsp;"userId",<br/>&emsp;"listName"  <br/>} |
+|||| 404 | { "message" } |
+|**GET**|'/lists'| Request all user owned lists of birds. |  | [<br/>&emsp;{<br/>&emsp;&emsp;"listId",<br/>&emsp;&emsp;"userId",<br/>&emsp;&emsp;"listName"  <br/>&emsp;},<br/>&emsp;. . .<br/>] |
+|**POST**|'/createList'| Create a new list from JSON object. | 201 ||
+|||| 400 | { "message" } |
+|**PUT**|'/editList'| Update a list's name with JSON object. | 200 | |
+|||| 400, 404 | { "message" } |
+|**DELETE**|'/deleteList/`{listId}`'| Delete a user owned list with a given ID. Also deletes all birds and notes tied to the list. | 204 ||
+|||| 400 | { "message" } |
+---
+---
+<br/>
+
+### Bird 
+| HTTP Method | Endpoint URL | Description | Status code | Returned Value |
+| :---: | :---: | :--- | :---: | :--- | 
+|**GET**|'/birds'| Request an array of all birds available in the database. | 200 | [<br/>&emsp; {<br/>&emsp;&emsp;"birdId",<br/>&emsp;&emsp;"listId", <br/>&emsp;&emsp;"birdName", <br/>&emsp;&emsp;"imgUrl", <br/>&emsp;&emsp;"zipCode"<br/>&emsp;},<br/>&emsp;  . . . <br/>] |
+|||| 400, 404 | { "message" } |
+|**GET**|'/lists/`{listId}`/birds'|Request an array of all birds from a list with a specific list ID.| 200 | [<br/>&emsp; {<br/>&emsp;&emsp;"birdId",<br/>&emsp;&emsp;"listId", <br/>&emsp;&emsp;"birdName", <br/>&emsp;&emsp;"imgUrl", <br/>&emsp;&emsp;"zipCode"<br/>&emsp;},<br/>&emsp;  . . . <br/>]|
+|||| 400, 404 | { "message" }|
+|**GET**|'/birds/`{zipCode}`'|Request an array of all birds seen at a given zipcode.| 200 | [<br/>&emsp; {<br/>&emsp;&emsp;"birdId",<br/>&emsp;&emsp;"listId", <br/>&emsp;&emsp;"birdName", <br/>&emsp;&emsp;"imgUrl", <br/>&emsp;&emsp;"zipCode"<br/>&emsp;},<br/>&emsp;  . . . <br/>]|
+|||| 400, 404 | { "message" }|
+|**GET**|'/birds/`{id}`'| Request a bird JSON object with a specific ID. | 200 | {<br/>&emsp;"birdId",<br/>&emsp;"listId", <br/>&emsp;"birdName", <br/>&emsp;"imgUrl", <br/>&emsp;"zipCode"<br/>} |
+|||| 400, 404 | { "message" }|
+|**GET**|'/randomBird'| Request a random bird. | 200 | {<br/>&emsp;"birdId",<br/>&emsp;"listId", <br/>&emsp;"birdName", <br/>&emsp;"imgUrl", <br/>&emsp;"zipCode"<br/>} |
+|||| 400, 404 | { "message" }|
+|**POST**|'/birds'| Create a bird from a JSON object. | 201 | |
+|||| 400 | { "message" }|
+|**PUT**|'/birds/{id}'| Update a user owned bird to match a JSON object. | 200 |  |
+|||| 400 | { "message" }|
+|**DELETE**|'/bird/{id}'| Delete a user owned bird from the database with a specific ID. Also deletes all notes tied to the bird. | 204 |  |
+|||| 400 | { "message" }|
+---
+---
+<br/>
+
+### Note
+| HTTP Method | Endpoint URL | Description | Status code | Returned Value |
+| :---: | :---: | :--- | :---: | :--- | 
+|**GET**|'/bird/`{birdId}`/notes'| Request an array of all notes for a bird. | 200 | [<br/>&emsp; {<br/>&emsp;&emsp;"noteId",<br/>&emsp;&emsp;"birdId",<br/>&emsp;&emsp;"dateSpotted",<br/>&emsp;&emsp;"numMales",<br/>&emsp;&emsp;"numFemales",    <br/>&emsp;&emsp;"feederType",    <br/>&emsp;&emsp;"foodBlend",    <br/>&emsp;&emsp;"notes"<br/>&emsp;},<br/>&emsp;  . . . <br/>] |
+|||| 400, 404 | { "message" } |
+|**GET**|'/note'| Request a note with a specific ID as a JSON object. | 200 | {<br/>&emsp;"noteId",<br/>&emsp;"birdId",<br/>&emsp;"dateSpotted",<br/>&emsp;"numMales",<br/>&emsp;"numFemales",    <br/>&emsp;"feederType",    <br/>&emsp;"foodBlend",    <br/>&emsp;"notes"<br/>} |
+|||| 400, 404 | { "message" } |
+|**POST**|'/newNote'| Create a note that matches a JSON object.  | 201 |  |
+|||| 400 | { "message" } |
+|**PUT**|'/editNote'| Update a user owned note to match a JSON object.  | 200 |  |
+|||| 400 | { "message" } |
+|**DELETE**|'/deleteNote/`{id}`'| Delete a user owned note with a specific ID.  | 204 |  |
+|||| 400 | { "message" } |
+---
+---
+<br/>
+
+
+
 
 ## Profile creation
 An anonymous user arrives at the landing page as shown below:
