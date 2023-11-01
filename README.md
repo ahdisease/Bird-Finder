@@ -1,11 +1,11 @@
-# Bird Nerds - WIP
+# Bird Nerds
 
 Bird Nerds is a hobby web app that allows users to post about birds they have seen at their local bird feeder. Bird sightings that have been posted store the birds so that they may be found in a search by zipcode. Users can look back at their reported sightings by viewing their saved lists.
 
 This project is built using C#/.NET and SQL Server for the back end API, and the Vue.js front end was provided as part of a Tech Elevator alumni project. In general, the front end has been left untouched in style, though minor structural edits may be made to adapt to the format of the back end API. Project partner:
 - [kimbambala](https://github.com/kimbambala)
 
-## Schema - WIP
+## Schema
 The diagram below describes the database schema.
 
 <img
@@ -14,10 +14,10 @@ The diagram below describes the database schema.
     width=700
 />
 
-## API Routes - User/Profile
-The following actions are available using the API:
-
-| HTTP Method | Endpoint URL[^1] | Description | Status code | Returned Value |
+## API Routes 
+The following tables describe all available API endpoints. Endpoint URLs were chosen to match Vue front end supplied by Tech Elevator.
+### User/Profile
+| HTTP Method | Endpoint URL | Description | Status code | Returned Value |
 | :---: | :---: | :--- | :---: | :--- | 
 |**POST**|'/register'| Register a new user. | 201 | {<br/>&emsp;"userId",<br/>&emsp;"username",<br/>&emsp;"role"<br />} |
 |||| 409, 500 | { "message" } |
@@ -26,15 +26,17 @@ The following actions are available using the API:
 |**GET**|'/profile'| Request the current user's profile information. | 200 |  {<br/>&emsp; "zipcode",<br/>&emsp; "skillLevel",<br/>&emsp; "favoriteBird",<br/>&emsp; "mostCommonBird",<br/>&emsp; "profileActive"<br/> }  |
 |||| 404 |  { "message" }  |
 |**POST**|'/createProfile'| Create a profile for the current user based on a JSON object in the body. Also reactivates a deleted profile. | 201 | { <br/>&emsp;"zipcode", <br/>&emsp;"skillLevel", <br/>&emsp;"favoriteBird", <br/>&emsp;"mostCommonBird", <br/>&emsp;"profileActive" <br/>} |
+|||| 400 | { "message" }  |
 |**PUT**|'/editProfile'| Updates a profile for the current user based on a JSON object in the body.| 200 |  |
+|||| 400 | { "message" }  |
 |**DELETE**|'/deleteProfile'| Deactivates a profile for the current user. | 204 |  |
 |||| 404 | { "message" }  |
 ---
 ---
 <br/>
 
-## API Routes - List
-| HTTP Method | Endpoint URL[^1] | Description | Status code | Returned Value |
+### List
+| HTTP Method | Endpoint URL | Description | Status code | Returned Value |
 | :---: | :---: | :--- | :---: | :--- | 
 |**GET**|'/lists/`{listId}`'| Request a user owned list of birds with given ID. | 200 | {<br/>&emsp;"listId",<br/>&emsp;"userId",<br/>&emsp;"listName"  <br/>} |
 |||| 404 | { "message" } |
@@ -49,8 +51,8 @@ The following actions are available using the API:
 ---
 <br/>
 
-## API Routes - Bird 
-| HTTP Method | Endpoint URL[^1] | Description | Status code | Returned Value |
+### Bird 
+| HTTP Method | Endpoint URL | Description | Status code | Returned Value |
 | :---: | :---: | :--- | :---: | :--- | 
 |**GET**|'/birds'| Request an array of all birds available in the database. | 200 | [<br/>&emsp; {<br/>&emsp;&emsp;"birdId",<br/>&emsp;&emsp;"listId", <br/>&emsp;&emsp;"birdName", <br/>&emsp;&emsp;"imgUrl", <br/>&emsp;&emsp;"zipCode"<br/>&emsp;},<br/>&emsp;  . . . <br/>] |
 |||| 400, 404 | { "message" } |
@@ -72,8 +74,8 @@ The following actions are available using the API:
 ---
 <br/>
 
-## API Routes - Note
-| HTTP Method | Endpoint URL[^1] | Description | Status code | Returned Value |
+### Note
+| HTTP Method | Endpoint URL | Description | Status code | Returned Value |
 | :---: | :---: | :--- | :---: | :--- | 
 |**GET**|'/bird/`{birdId}`/notes'| Request an array of all notes for a bird. | 200 | [<br/>&emsp; {<br/>&emsp;&emsp;"noteId",<br/>&emsp;&emsp;"birdId",<br/>&emsp;&emsp;"dateSpotted",<br/>&emsp;&emsp;"numMales",<br/>&emsp;&emsp;"numFemales",    <br/>&emsp;&emsp;"feederType",    <br/>&emsp;&emsp;"foodBlend",    <br/>&emsp;&emsp;"notes"<br/>&emsp;},<br/>&emsp;  . . . <br/>] |
 |||| 400, 404 | { "message" } |
@@ -89,7 +91,7 @@ The following actions are available using the API:
 ---
 <br/>
 
-[^1]: Endpoint URLs were chosen to match Vue frontend supplied by Tech Elevator.
+
 
 
 ## Profile creation
