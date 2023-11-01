@@ -14,7 +14,7 @@ The diagram below describes the database schema.
     width=700
 />
 
-## API Routes - Profile
+## API Routes - User/Profile
 The following actions are available using the API:
 
 | HTTP Method | Endpoint URL[^1] | Description | Status code | Returned Value |
@@ -43,7 +43,7 @@ The following actions are available using the API:
 |||| 400 | { "message" } |
 |**PUT**|'/editList'| Update a list's name with JSON object. | 200 | |
 |||| 400, 404 | { "message" } |
-|**DELETE**|'/deleteList/`{listId}`'| Delete a list with a given ID. | 204 ||
+|**DELETE**|'/deleteList/`{listId}`'| Delete a user owned list with a given ID. Also deletes all birds and notes tied to the list. | 204 ||
 |||| 400 | { "message" } |
 ---
 ---
@@ -64,9 +64,9 @@ The following actions are available using the API:
 |||| 400, 404 | { "message" }|
 |**POST**|'/birds'| Create a bird from a JSON object. | 201 | |
 |||| 400 | { "message" }|
-|**PUT**|'/birds/{id}'| Update a bird from a JSON object. | 200 |  |
+|**PUT**|'/birds/{id}'| Update a user owned bird to match a JSON object. | 200 |  |
 |||| 400 | { "message" }|
-|**DELETE**|'/bird/{id}'| Delete a bird from the database with a specific ID. | 204 |  |
+|**DELETE**|'/bird/{id}'| Delete a user owned bird from the database with a specific ID. Also deletes all notes tied to the bird. | 204 |  |
 |||| 400 | { "message" }|
 ---
 ---
@@ -75,8 +75,16 @@ The following actions are available using the API:
 ## API Routes - Note
 | HTTP Method | Endpoint URL[^1] | Description | Status code | Returned Value |
 | :---: | :---: | :--- | :---: | :--- | 
-|**GET**|'/birds'| Request an array of all birds available in the database. | 200 | [<br/>&emsp; {<br/>&emsp;&emsp;"birdId",<br/>&emsp;&emsp;"listId", <br/>&emsp;&emsp;"birdName", <br/>&emsp;&emsp;"imgUrl", <br/>&emsp;&emsp;"zipCode"<br/>&emsp;},<br/>&emsp;  . . . <br/>] |
+|**GET**|'/bird/`{birdId}`/notes'| Request an array of all notes for a bird. | 200 | [<br/>&emsp; {<br/>&emsp;&emsp;"noteId",<br/>&emsp;&emsp;"birdId",<br/>&emsp;&emsp;"dateSpotted",<br/>&emsp;&emsp;"numMales",<br/>&emsp;&emsp;"numFemales",    <br/>&emsp;&emsp;"feederType",    <br/>&emsp;&emsp;"foodBlend",    <br/>&emsp;&emsp;"notes"<br/>&emsp;},<br/>&emsp;  . . . <br/>] |
 |||| 400, 404 | { "message" } |
+|**GET**|'/note'| Request a note with a specific ID as a JSON object. | 200 | {<br/>&emsp;"noteId",<br/>&emsp;"birdId",<br/>&emsp;"dateSpotted",<br/>&emsp;"numMales",<br/>&emsp;"numFemales",    <br/>&emsp;"feederType",    <br/>&emsp;"foodBlend",    <br/>&emsp;"notes"<br/>} |
+|||| 400, 404 | { "message" } |
+|**POST**|'/newNote'| Create a note that matches a JSON object.  | 201 |  |
+|||| 400 | { "message" } |
+|**PUT**|'/editNote'| Update a user owned note to match a JSON object.  | 200 |  |
+|||| 400 | { "message" } |
+|**DELETE**|'/deleteNote/`{id}`'| Delete a user owned note with a specific ID.  | 204 |  |
+|||| 400 | { "message" } |
 ---
 ---
 <br/>
